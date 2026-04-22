@@ -1,0 +1,58 @@
+'use client';
+
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Sidebar } from './Sidebar';
+
+export function AppShell({ children }: { children: React.ReactNode }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  return (
+    <>
+      <a href="#main-content" className="skip-to-content">
+        Skip to content
+      </a>
+
+      <div className="flex h-screen overflow-hidden">
+        {/* Desktop sidebar */}
+        <aside className="hidden w-[280px] shrink-0 md:block">
+          <Sidebar />
+        </aside>
+
+        {/* Mobile drawer overlay */}
+        {isSidebarOpen && (
+          <div className="fixed inset-0 z-40 md:hidden">
+            <div
+              className="absolute inset-0 bg-black/50 animate-fade-in"
+              onClick={() => setIsSidebarOpen(false)}
+            />
+            <aside className="relative z-50 h-full w-[280px] animate-scale-in">
+              <Sidebar onClose={() => setIsSidebarOpen(false)} />
+            </aside>
+          </div>
+        )}
+
+        {/* Main pane */}
+        <div className="flex flex-1 flex-col overflow-hidden">
+          {/* Mobile header */}
+          <div className="flex items-center border-b border-border p-2 md:hidden">
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label="Open sidebar"
+              onClick={() => setIsSidebarOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <span className="ml-2 text-sm font-semibold text-foreground">Notes</span>
+          </div>
+
+          <main id="main-content" className="flex-1 overflow-y-auto">
+            {children}
+          </main>
+        </div>
+      </div>
+    </>
+  );
+}

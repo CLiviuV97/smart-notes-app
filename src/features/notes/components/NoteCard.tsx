@@ -12,12 +12,12 @@ export function NoteCard({ note }: NoteCardProps) {
   return (
     <Link
       href={`/notes/${note.id}`}
-      className="block rounded-lg border border-zinc-200 p-4 transition hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-zinc-800"
+      className="block animate-fade-in rounded-lg border border-border p-4 transition hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
-      <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+      <h3 className="text-lg font-semibold text-foreground">
         {note.title}
       </h3>
-      <p className="mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
         {note.content}
       </p>
       {note.tags.length > 0 && (
@@ -25,14 +25,14 @@ export function NoteCard({ note }: NoteCardProps) {
           {note.tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-xs text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
+              className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary"
             >
               {tag}
             </span>
           ))}
         </div>
       )}
-      <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+      <p className="mt-2 text-xs text-muted-foreground">
         {formatDistanceToNow(new Date(note.updatedAt), { addSuffix: true })}
       </p>
     </Link>
