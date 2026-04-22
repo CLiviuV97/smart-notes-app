@@ -3,6 +3,9 @@ import { z } from 'zod';
 export const createNoteSchema = z.object({
   title: z.string().trim().min(1).max(200),
   content: z.string().max(50_000),
+  summary: z.string().max(300).nullish(),
+  tags: z.array(z.string().max(30)).max(5).optional(),
+  aiGeneratedAt: z.string().nullish(),
 });
 
 export const updateNoteSchema = createNoteSchema.partial();

@@ -2,6 +2,7 @@ import { AppError } from '@/server/errors/AppError';
 import type { Note, PaginatedResult } from '@/types/note';
 import type { INotesRepository } from '@/server/repositories/types';
 import { notesRepository } from '@/server/repositories/NotesRepository';
+import type { CreateNoteInput } from '@/lib/validators/noteSchemas';
 
 export class NotesService {
   constructor(private repo: INotesRepository) {}
@@ -21,7 +22,7 @@ export class NotesService {
     return note;
   }
 
-  async create(uid: string, input: { title: string; content: string }): Promise<Note> {
+  async create(uid: string, input: CreateNoteInput): Promise<Note> {
     return this.repo.create({ ownerId: uid, ...input });
   }
 

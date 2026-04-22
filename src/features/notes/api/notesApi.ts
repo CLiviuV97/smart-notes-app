@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { auth } from '@/lib/firebase/client';
 import type { Note, PaginatedResult } from '@/types/note';
+import type { ExtractedPdf } from '@/types/pdf';
 
 interface ListNotesParams {
   cursor?: string;
@@ -31,7 +32,9 @@ export const notesApi = createApi({
       },
       serializeQueryArgs: ({ endpointName }) => endpointName,
       merge: (currentCache, newItems) => {
-        currentCache.items.push(...newItems.items);
+        const existingIds = new Set(currentCache.items.map((n) => n.id));
+        const unique = newItems.items.filter((n) => !existingIds.has(n.id));
+        currentCache.items.push(...unique);
         currentCache.nextCursor = newItems.nextCursor;
       },
       forceRefetch: ({ currentArg, previousArg }) => currentArg?.cursor !== previousArg?.cursor,
@@ -49,7 +52,10 @@ export const notesApi = createApi({
       providesTags: (_result, _error, id) => [{ type: 'Note', id }],
     }),
 
-    createNote: builder.mutation<Note, { title: string; content: string }>({
+    createNote: builder.mutation<Note, {
+      title: string; content: string;
+      summary?: string | null; tags?: string[]; aiGeneratedAt?: string | null;
+    }>({
       query: (body) => ({
         url: '/notes',
         method: 'POST',
@@ -65,15 +71,22 @@ export const notesApi = createApi({
         body: patch,
       }),
       async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
+        const patchNote = dispatch(
           notesApi.util.updateQueryData('getNote', id, (draft) => {
             Object.assign(draft, patch);
+          }),
+        );
+        const patchList = dispatch(
+          notesApi.util.updateQueryData('listNotes', 'listNotes' as never, (draft) => {
+            const note = draft.items.find((n) => n.id === id);
+            if (note) Object.assign(note, patch);
           }),
         );
         try {
           await queryFulfilled;
         } catch {
-          patchResult.undo();
+          patchNote.undo();
+          patchList.undo();
         }
       },
       invalidatesTags: (_result, _error, { id }) => [
@@ -100,6 +113,14 @@ export const notesApi = createApi({
       }),
       invalidatesTags: (_result, _error, id) => [{ type: 'Note', id }],
     }),
+
+    extractPdf: builder.mutation<ExtractedPdf, File>({
+      query: (file) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        return { url: '/notes/import-pdf', method: 'POST', body: formData };
+      },
+    }),
   }),
 });
 
@@ -110,4 +131,5 @@ export const {
   useUpdateNoteMutation,
   useDeleteNoteMutation,
   useGenerateAISummaryMutation,
+  useExtractPdfMutation,
 } = notesApi;

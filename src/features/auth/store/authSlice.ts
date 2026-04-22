@@ -36,7 +36,7 @@ const authSlice = createSlice({
     },
     clearAuth(state) {
       state.user = null;
-      state.status = 'idle';
+      state.status = 'unauthenticated';
       state.error = null;
       state.idToken = null;
     },

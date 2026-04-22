@@ -12,7 +12,7 @@ export interface SerializedUser {
   photoURL: string | null;
 }
 
-export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'error';
+export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated' | 'error';
 
 export interface ApiErrorResponse {
   error: string;

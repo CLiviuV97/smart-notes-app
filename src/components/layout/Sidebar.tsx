@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Search, Plus, LogOut } from 'lucide-react';
+import { useState } from 'react';
+import { Search, Plus, LogOut, FileUp } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/store';
 import { setSearchQuery, selectSearchQuery, selectSelectedNoteId, setSelectedNote } from '@/features/notes/store/notesUiSlice';
 import { useInfiniteNotes } from '@/features/notes/hooks/useInfiniteNotes';
@@ -13,6 +14,7 @@ import { SkeletonNoteCardList } from '@/features/notes/components/SkeletonNoteCa
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
 import { ThemeToggle } from './ThemeToggle';
+import { PdfImportModal } from '@/features/notes/components/PdfImportModal';
 
 interface SidebarProps {
   onClose?: () => void;
@@ -26,6 +28,7 @@ export function Sidebar({ onClose }: SidebarProps) {
   const { user } = useAuthSession();
   const { notes, sentinelRef, isFetching, hasMore } = useInfiniteNotes();
   const [createNote, { isLoading: isCreating }] = useCreateNoteMutation();
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   const handleCreateNote = async () => {
     try {
@@ -50,10 +53,16 @@ export function Sidebar({ onClose }: SidebarProps) {
       <div className="space-y-3 p-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-surface-foreground">Notes</h2>
-          <Button size="sm" loading={isCreating} onClick={handleCreateNote}>
-            <Plus className="h-4 w-4" />
-            New
-          </Button>
+          <div className="flex items-center gap-1">
+            <Button variant="outline" size="sm" onClick={() => setIsPdfModalOpen(true)}>
+              <FileUp className="h-4 w-4" />
+              PDF
+            </Button>
+            <Button size="sm" loading={isCreating} onClick={handleCreateNote}>
+              <Plus className="h-4 w-4" />
+              New
+            </Button>
+          </div>
         </div>
         <div className="relative">
           <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -127,6 +136,7 @@ export function Sidebar({ onClose }: SidebarProps) {
           </Button>
         </div>
       </div>
+      <PdfImportModal open={isPdfModalOpen} onOpenChange={setIsPdfModalOpen} />
     </div>
   );
 }

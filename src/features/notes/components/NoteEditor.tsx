@@ -21,15 +21,17 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const initializedForRef = useRef<string | null>(null);
 
-  // Sync from server
+  // Sync from server — only on note switch or initial load
   useEffect(() => {
-    if (note) {
+    if (note && initializedForRef.current !== noteId) {
+      initializedForRef.current = noteId;
       setTitle(note.title);
       setContent(note.content);
       setSaveStatus('idle');
     }
-  }, [note]);
+  }, [note, noteId]);
 
   // Auto-resize textarea
   useEffect(() => {

@@ -11,7 +11,7 @@ export const geminiModel = genAI.getGenerativeModel({
   model: process.env.GEMINI_MODEL ?? 'gemini-3-flash-preview',
   generationConfig: {
     temperature: 0.3,
-    maxOutputTokens: 512,
+    maxOutputTokens: 2048,
     responseMimeType: 'application/json',
   },
 });

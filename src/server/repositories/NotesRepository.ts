@@ -36,14 +36,17 @@ class NotesRepository implements INotesRepository {
     return doc.exists ? this.toNote(doc) : null;
   }
 
-  async create(data: { ownerId: string; title: string; content: string }): Promise<Note> {
+  async create(data: {
+    ownerId: string; title: string; content: string;
+    summary?: string | null; tags?: string[]; aiGeneratedAt?: string | null;
+  }): Promise<Note> {
     const ref = await this.collection.add({
       ownerId: data.ownerId,
       title: data.title,
       content: data.content,
-      summary: null,
-      tags: [],
-      aiGeneratedAt: null,
+      summary: data.summary ?? null,
+      tags: data.tags ?? [],
+      aiGeneratedAt: data.aiGeneratedAt ?? null,
       createdAt: FieldValue.serverTimestamp(),
       updatedAt: FieldValue.serverTimestamp(),
     });

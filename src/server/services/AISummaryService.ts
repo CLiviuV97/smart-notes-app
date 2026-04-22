@@ -9,7 +9,7 @@ import { NotesService } from './NotesService';
 // --- Zod schema for AI response validation ---
 
 export const aiResponseSchema = z.object({
-  summary: z.string().max(300),
+  summary: z.string().transform((s) => s.slice(0, 300)),
   tags: z.array(z.string()).max(5),
 });
 
@@ -111,7 +111,8 @@ export class GeminiSummaryService implements IAISummaryService {
 
   private parseResponse(raw: string): AIResponse | null {
     try {
-      const json = JSON.parse(raw);
+      const cleaned = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+      const json = JSON.parse(cleaned);
       return aiResponseSchema.parse(json);
     } catch {
       return null;

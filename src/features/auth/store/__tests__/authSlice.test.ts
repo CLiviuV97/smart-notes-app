@@ -55,13 +55,13 @@ describe('authSlice', () => {
     expect(state.idToken).toBe('my-token');
   });
 
-  it('clearAuth resets to idle', () => {
+  it('clearAuth resets to unauthenticated', () => {
     let state = authReducer(initialState, setUser(mockUser));
     state = authReducer(state, setIdToken('token'));
     state = authReducer(state, clearAuth());
     expect(state).toEqual({
       user: null,
-      status: 'idle',
+      status: 'unauthenticated',
       error: null,
       idToken: null,
     });
