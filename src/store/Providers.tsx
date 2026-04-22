@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Provider as ReduxProvider } from 'react-redux';
+import { setupListeners } from '@reduxjs/toolkit/query';
 import { makeStore, useAppDispatch } from '@/store';
 import { setUser, setIdToken, clearAuth, setLoading } from '@/features/auth/store/authSlice';
 import { onAuthChange, onTokenChange } from '@/features/auth/services/authClient';
@@ -48,6 +49,15 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [store] = useState(makeStore);
+  const listenersSetup = useRef(false);
+
+  useEffect(() => {
+    if (!listenersSetup.current) {
+      const unsubscribe = setupListeners(store.dispatch);
+      listenersSetup.current = true;
+      return unsubscribe;
+    }
+  }, [store.dispatch]);
 
   return (
     <ReduxProvider store={store}>
