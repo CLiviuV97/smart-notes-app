@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { AppError } from '@/server/errors/AppError';
+import { logger } from '@/lib/logger';
 import type { ApiErrorResponse } from '@/types/api';
 
 type RouteHandler = (req: Request, ctx: unknown) => Promise<Response>;
@@ -24,7 +25,7 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
         );
       }
 
-      console.error('Unhandled error:', error);
+      logger.error('Unhandled API error', { error: error instanceof Error ? { message: error.message, stack: error.stack } : { value: String(error) } });
       return NextResponse.json<ApiErrorResponse>(
         { error: 'INTERNAL', message: 'Internal server error' },
         { status: 500 },
