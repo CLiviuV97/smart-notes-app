@@ -34,7 +34,7 @@ export const notesApi = createApi({
         currentCache.items.push(...newItems.items);
         currentCache.nextCursor = newItems.nextCursor;
       },
-      forceRefetch: ({ currentArg, previousArg }) => currentArg !== previousArg,
+      forceRefetch: ({ currentArg, previousArg }) => currentArg?.cursor !== previousArg?.cursor,
       providesTags: (result) =>
         result
           ? [

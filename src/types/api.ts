@@ -17,4 +17,5 @@ export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'error';
 export interface ApiErrorResponse {
   error: string;
   message?: string;
+  details?: unknown;
 }

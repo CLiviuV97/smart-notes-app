@@ -19,7 +19,7 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
 
       if (error instanceof ZodError) {
         return NextResponse.json<ApiErrorResponse>(
-          { error: 'VALIDATION_ERROR', message: error.message },
+          { error: 'VALIDATION', details: error.flatten() },
           { status: 400 },
         );
       }
