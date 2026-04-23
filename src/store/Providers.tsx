@@ -7,6 +7,7 @@ import { makeStore, useAppDispatch } from '@/store';
 import { setUser, setIdToken, clearAuth, setLoading } from '@/features/auth/store/authSlice';
 import { onAuthChange, onTokenChange } from '@/features/auth/services/authClient';
 import type { SerializedUser } from '@/types/api';
+import { notesApi } from '@/features/notes/api/notesApi';
 import { ToastProvider } from '@/components/ui/ToastProvider';
 import { useErrorReporter } from '@/lib/hooks/useErrorReporter';
 
@@ -27,6 +28,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         dispatch(setUser(user));
       } else {
         dispatch(clearAuth());
+        dispatch(notesApi.util.resetApiState());
       }
     });
 
