@@ -34,9 +34,7 @@ describe('LoginForm', () => {
     await user.type(screen.getByLabelText(/password/i), '12345');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(
-      await screen.findByText(/password must be at least 6 characters/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/password must be at least 6 characters/i)).toBeInTheDocument();
     expect(mockLoginWithEmail).not.toHaveBeenCalled();
   });
 
@@ -50,10 +48,7 @@ describe('LoginForm', () => {
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(mockLoginWithEmail).toHaveBeenCalledWith(
-        'test@example.com',
-        'password123',
-      );
+      expect(mockLoginWithEmail).toHaveBeenCalledWith('test@example.com', 'password123');
     });
 
     expect(mockPush).toHaveBeenCalledWith('/notes');
@@ -71,9 +66,7 @@ describe('LoginForm', () => {
     await user.type(screen.getByLabelText(/password/i), 'password123');
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
-    expect(
-      await screen.findByText(/invalid email or password/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/invalid email or password/i)).toBeInTheDocument();
     expect(mockPush).not.toHaveBeenCalled();
   });
 });

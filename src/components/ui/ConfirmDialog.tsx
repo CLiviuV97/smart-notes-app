@@ -36,10 +36,11 @@ export function ConfirmDialog({
           )}
           aria-describedby="confirm-dialog-desc"
         >
-          <Dialog.Title className="text-lg font-semibold text-foreground">
-            {title}
-          </Dialog.Title>
-          <Dialog.Description id="confirm-dialog-desc" className="mt-2 text-sm text-muted-foreground">
+          <Dialog.Title className="text-lg font-semibold text-foreground">{title}</Dialog.Title>
+          <Dialog.Description
+            id="confirm-dialog-desc"
+            className="mt-2 text-sm text-muted-foreground"
+          >
             {description}
           </Dialog.Description>
           <div className="mt-6 flex justify-end gap-3">

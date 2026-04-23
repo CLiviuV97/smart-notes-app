@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --paper: #faf9f7;
@@ -11,7 +11,7 @@
   --rule: #e2dfd8;
   --rule-2: #d4d0c8;
   --accent: #2563eb;
-  --accent-wash: rgba(37,99,235,0.08);
+  --accent-wash: rgba(37, 99, 235, 0.08);
   --margin-red: #b33a2e;
   --ok: #2e8b57;
 
@@ -47,7 +47,7 @@
   --rule: #2a2826;
   --rule-2: #3a3834;
   --accent: #3b82f6;
-  --accent-wash: rgba(59,130,246,0.12);
+  --accent-wash: rgba(59, 130, 246, 0.12);
   --margin-red: #d4554a;
   --ok: #3da96e;
 
@@ -108,23 +108,44 @@
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scale-in {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes pulseDot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
 }
 
 @utility animate-fade-in {

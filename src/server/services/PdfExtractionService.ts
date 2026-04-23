@@ -92,7 +92,8 @@ export class GeminiPdfExtractionService implements IPdfExtractionService {
     try {
       rawText = await this.callGeminiRaw(
         buffer,
-        EXTRACTION_PROMPT + '\n\nYour previous response was not valid JSON. Return ONLY valid JSON.',
+        EXTRACTION_PROMPT +
+          '\n\nYour previous response was not valid JSON. Return ONLY valid JSON.',
       );
     } catch {
       throw new AppError('PDF extraction failed', 'AI_ERROR', 502);
@@ -136,7 +137,10 @@ export class GeminiPdfExtractionService implements IPdfExtractionService {
 
   private parseResponse(raw: string): ExtractedPdfAIResponse | null {
     try {
-      const cleaned = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+      const cleaned = raw
+        .replace(/^```(?:json)?\s*\n?/i, '')
+        .replace(/\n?```\s*$/i, '')
+        .trim();
       const json = JSON.parse(cleaned);
       return extractedPdfSchema.parse(json);
     } catch {

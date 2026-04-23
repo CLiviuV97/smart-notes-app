@@ -11,8 +11,7 @@ export function makeStore() {
       notesUi: notesUiReducer,
       [notesApi.reducerPath]: notesApi.reducer,
     },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(notesApi.middleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(notesApi.middleware),
   });
 }
 

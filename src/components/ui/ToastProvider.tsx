@@ -1,7 +1,14 @@
 'use client';
 
 import * as ToastPrimitive from '@radix-ui/react-toast';
-import { ToastRoot, ToastTitle, ToastDescription, ToastAction, ToastClose, ToastViewport } from './Toast';
+import {
+  ToastRoot,
+  ToastTitle,
+  ToastDescription,
+  ToastAction,
+  ToastClose,
+  ToastViewport,
+} from './Toast';
 import { ToastContext, useToastReducer } from './useToast';
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {

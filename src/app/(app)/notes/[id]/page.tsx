@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Sparkles, FolderOpen } from 'lucide-react';
+import { FolderOpen } from 'lucide-react';
 import { useAppDispatch } from '@/store';
 import { setSelectedNote } from '@/features/notes/store/notesUiSlice';
 import { useGetNoteQuery } from '@/features/notes/api/notesApi';

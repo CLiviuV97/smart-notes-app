@@ -43,10 +43,7 @@ export async function POST(req: Request) {
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json(
-      { error: 'VALIDATION', message: 'Invalid JSON' },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'VALIDATION', message: 'Invalid JSON' }, { status: 400 });
   }
 
   const parsed = logErrorSchema.safeParse(body);

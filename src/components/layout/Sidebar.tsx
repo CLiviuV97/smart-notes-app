@@ -4,12 +4,16 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Search, Plus, LogOut, FileUp } from 'lucide-react';
 import { useAppSelector, useAppDispatch } from '@/store';
-import { setSearchQuery, selectSearchQuery, selectSelectedNoteId, setSelectedNote } from '@/features/notes/store/notesUiSlice';
+import {
+  setSearchQuery,
+  selectSearchQuery,
+  selectSelectedNoteId,
+  setSelectedNote,
+} from '@/features/notes/store/notesUiSlice';
 import { useInfiniteNotes } from '@/features/notes/hooks/useInfiniteNotes';
 import { useCreateNoteMutation } from '@/features/notes/api/notesApi';
 import { useAuthSession } from '@/features/auth/hooks/useAuthSession';
 import { logout } from '@/features/auth/services/authClient';
-import { NoteCard } from '@/features/notes/components/NoteCard';
 import { SkeletonNoteCardList } from '@/features/notes/components/SkeletonNoteCard';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
@@ -31,9 +35,10 @@ export function Sidebar({ onClose }: SidebarProps) {
   const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   const filteredNotes = searchQuery
-    ? notes.filter(n =>
-        n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        n.content.toLowerCase().includes(searchQuery.toLowerCase())
+    ? notes.filter(
+        (n) =>
+          n.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          n.content.toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : notes;
 
@@ -54,18 +59,20 @@ export function Sidebar({ onClose }: SidebarProps) {
     onClose?.();
   };
 
-  const initials = user?.email
-    ? user.email.slice(0, 2).toUpperCase()
-    : 'U';
+  const initials = user?.email ? user.email.slice(0, 2).toUpperCase() : 'U';
 
   return (
     <div className="flex h-full flex-col bg-paper">
       {/* Brand area */}
       <div className="flex items-center gap-2.5 border-b border-rule px-4 py-3.5">
         <div className="flex h-[22px] w-[22px] items-center justify-center rounded-[3px] bg-ink">
-          <span className="font-serif text-[13px] italic font-semibold leading-none text-paper">S</span>
+          <span className="font-serif text-[13px] italic font-semibold leading-none text-paper">
+            S
+          </span>
         </div>
-        <span className="font-serif text-[22px] italic font-semibold leading-none text-ink">Smart Notes</span>
+        <span className="font-serif text-[22px] italic font-semibold leading-none text-ink">
+          Smart Notes
+        </span>
       </div>
 
       {/* Actions */}
@@ -125,20 +132,25 @@ export function Sidebar({ onClose }: SidebarProps) {
             key={note.id}
             onClick={() => handleSelectNote(note.id)}
             className={`relative flex w-full flex-col border-b border-rule px-5 py-3.5 text-left transition-colors ${
-              selectedNoteId === note.id
-                ? 'bg-paper-3'
-                : 'hover:bg-paper-2'
+              selectedNoteId === note.id ? 'bg-paper-3' : 'hover:bg-paper-2'
             }`}
           >
             {selectedNoteId === note.id && (
               <div className="absolute inset-y-0 left-0 w-[3px] bg-margin-red" />
             )}
-            <p className="truncate font-serif text-[15px] font-medium leading-tight tracking-[-0.005em] text-ink">{note.title}</p>
+            <p className="truncate font-serif text-[15px] font-medium leading-tight tracking-[-0.005em] text-ink">
+              {note.title}
+            </p>
             <p className="mt-1 line-clamp-2 font-serif text-[13px] leading-[1.4] text-ink-2">
               {note.content.slice(0, 80)}
             </p>
             <div className="mt-2 flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-[0.04em] text-ink-3">
-              <span>{new Date(note.updatedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+              <span>
+                {new Date(note.updatedAt).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })}
+              </span>
             </div>
           </button>
         ))}
@@ -164,9 +176,7 @@ export function Sidebar({ onClose }: SidebarProps) {
           <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-margin-red text-[11px] font-semibold text-white">
             {initials}
           </div>
-          <span className="truncate text-[12px] text-ink-2">
-            {user?.email ?? 'User'}
-          </span>
+          <span className="truncate text-[12px] text-ink-2">{user?.email ?? 'User'}</span>
         </div>
         <div className="flex items-center gap-0.5">
           <ThemeToggle />

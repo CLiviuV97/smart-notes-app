@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ToastProvider } from '../ToastProvider';
 import { useToast } from '../useToast';
@@ -8,7 +8,15 @@ function TestConsumer() {
   return (
     <div>
       <button onClick={() => toast({ title: 'Success!' })}>Show toast</button>
-      <button onClick={() => toast({ variant: 'error', title: 'Error!', action: { label: 'Retry', onClick: jest.fn() } })}>
+      <button
+        onClick={() =>
+          toast({
+            variant: 'error',
+            title: 'Error!',
+            action: { label: 'Retry', onClick: jest.fn() },
+          })
+        }
+      >
         Show error
       </button>
     </div>

@@ -19,10 +19,15 @@ export const extractedPdfSchema = z.object({
   summary: z.string().max(300),
   tags: z.array(z.string().max(30)).max(5),
   highlights: z.array(z.string().max(200)).min(1).max(5),
-  sections: z.array(z.object({
-    heading: z.string().max(100),
-    content: z.string(),
-  })).min(1).max(30),
+  sections: z
+    .array(
+      z.object({
+        heading: z.string().max(100),
+        content: z.string(),
+      }),
+    )
+    .min(1)
+    .max(30),
   warnings: z.array(z.string()).max(10).default([]),
 });
 

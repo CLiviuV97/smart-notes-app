@@ -69,7 +69,10 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="register-email" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label
+          htmlFor="register-email"
+          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+        >
           Email
         </label>
         <input
@@ -80,13 +83,14 @@ export function RegisterForm() {
           className="mt-1 block w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
           required
         />
-        {fieldErrors.email && (
-          <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>
-        )}
+        {fieldErrors.email && <p className="mt-1 text-sm text-red-600">{fieldErrors.email}</p>}
       </div>
 
       <div>
-        <label htmlFor="register-password" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label
+          htmlFor="register-password"
+          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+        >
           Password
         </label>
         <input
@@ -103,7 +107,10 @@ export function RegisterForm() {
       </div>
 
       <div>
-        <label htmlFor="register-confirm" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label
+          htmlFor="register-confirm"
+          className="block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+        >
           Confirm Password
         </label>
         <input

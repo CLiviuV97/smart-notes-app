@@ -7,9 +7,7 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-1 flex-col items-center justify-center bg-paper px-4 py-12">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
-          <h1 className="font-serif text-[28px] italic font-semibold text-ink">
-            Smart Notes
-          </h1>
+          <h1 className="font-serif text-[28px] italic font-semibold text-ink">Smart Notes</h1>
           <p className="mt-1 text-[14px] text-ink-3">Sign in to your account</p>
         </div>
 
@@ -20,9 +18,7 @@ export default function LoginPage() {
             <div className="w-full border-t border-rule" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-paper px-2 text-ink-3">
-              or
-            </span>
+            <span className="bg-paper px-2 text-ink-3">or</span>
           </div>
         </div>
 
@@ -30,10 +26,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-ink-2">
           Don&apos;t have an account?{' '}
-          <Link
-            href="/register"
-            className="font-medium text-accent hover:underline"
-          >
+          <Link href="/register" className="font-medium text-accent hover:underline">
             Register
           </Link>
         </p>

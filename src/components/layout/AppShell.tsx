@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Sidebar } from './Sidebar';
 
@@ -45,7 +45,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <span className="ml-2 font-serif text-[18px] italic font-semibold text-ink">Smart Notes</span>
+            <span className="ml-2 font-serif text-[18px] italic font-semibold text-ink">
+              Smart Notes
+            </span>
           </div>
 
           <main id="main-content" className="flex-1 overflow-y-auto">

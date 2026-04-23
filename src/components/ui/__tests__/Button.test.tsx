@@ -6,32 +6,32 @@ describe('Button', () => {
     render(<Button>Click me</Button>);
     const btn = screen.getByRole('button', { name: 'Click me' });
     expect(btn).toBeInTheDocument();
-    expect(btn.className).toContain('bg-ink');
+    expect(btn).toHaveClass('bg-ink');
   });
 
   it('renders destructive variant', () => {
     render(<Button variant="destructive">Delete</Button>);
     const btn = screen.getByRole('button', { name: 'Delete' });
-    expect(btn.className).toContain('bg-margin-red');
+    expect(btn).toHaveClass('bg-margin-red');
   });
 
   it('renders outline variant', () => {
     render(<Button variant="outline">Outline</Button>);
     const btn = screen.getByRole('button', { name: 'Outline' });
-    expect(btn.className).toContain('border');
+    expect(btn).toHaveClass('border');
   });
 
   it('renders ghost variant', () => {
     render(<Button variant="ghost">Ghost</Button>);
     const btn = screen.getByRole('button', { name: 'Ghost' });
-    expect(btn.className).toContain('hover:bg-paper-3');
+    expect(btn).toHaveClass('hover:bg-paper-3');
   });
 
   it('shows spinner when loading', () => {
     render(<Button loading>Save</Button>);
     const btn = screen.getByRole('button');
     expect(btn).toBeDisabled();
-    expect(btn.querySelector('[role="status"]')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
     expect(btn).toHaveTextContent('Save');
   });
 

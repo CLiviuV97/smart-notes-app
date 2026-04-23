@@ -14,9 +14,7 @@ export interface ToastItem {
   };
 }
 
-type ToastAction =
-  | { type: 'ADD'; toast: ToastItem }
-  | { type: 'DISMISS'; id: string };
+type ToastAction = { type: 'ADD'; toast: ToastItem } | { type: 'DISMISS'; id: string };
 
 function toastReducer(state: ToastItem[], action: ToastAction): ToastItem[] {
   switch (action.type) {
@@ -42,14 +40,11 @@ export const ToastContext = createContext<ToastContextValue | null>(null);
 export function useToastReducer() {
   const [toasts, dispatch] = useReducer(toastReducer, []);
 
-  const toast = useCallback(
-    (opts: Omit<ToastItem, 'id'>) => {
-      const id = String(++toastCount);
-      dispatch({ type: 'ADD', toast: { ...opts, id } });
-      return id;
-    },
-    [],
-  );
+  const toast = useCallback((opts: Omit<ToastItem, 'id'>) => {
+    const id = String(++toastCount);
+    dispatch({ type: 'ADD', toast: { ...opts, id } });
+    return id;
+  }, []);
 
   const dismiss = useCallback((id: string) => {
     dispatch({ type: 'DISMISS', id });

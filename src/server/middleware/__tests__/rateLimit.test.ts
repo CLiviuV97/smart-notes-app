@@ -1,4 +1,9 @@
-import { checkAIRateLimit, checkPdfRateLimit, acquirePdfConcurrency, releasePdfConcurrency } from '../rateLimit';
+import {
+  checkAIRateLimit,
+  checkPdfRateLimit,
+  acquirePdfConcurrency,
+  releasePdfConcurrency,
+} from '../rateLimit';
 import { AppError } from '@/server/errors/AppError';
 
 describe('checkAIRateLimit', () => {

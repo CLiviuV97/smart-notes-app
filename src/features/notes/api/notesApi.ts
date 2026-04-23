@@ -52,10 +52,16 @@ export const notesApi = createApi({
       providesTags: (_result, _error, id) => [{ type: 'Note', id }],
     }),
 
-    createNote: builder.mutation<Note, {
-      title: string; content: string;
-      summary?: string | null; tags?: string[]; aiGeneratedAt?: string | null;
-    }>({
+    createNote: builder.mutation<
+      Note,
+      {
+        title: string;
+        content: string;
+        summary?: string | null;
+        tags?: string[];
+        aiGeneratedAt?: string | null;
+      }
+    >({
       query: (body) => ({
         url: '/notes',
         method: 'POST',

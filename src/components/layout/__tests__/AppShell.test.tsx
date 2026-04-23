@@ -16,19 +16,31 @@ import { AppShell } from '../AppShell';
 
 describe('AppShell', () => {
   it('renders sidebar', () => {
-    render(<AppShell><div>Content</div></AppShell>);
+    render(
+      <AppShell>
+        <div>Content</div>
+      </AppShell>,
+    );
     expect(screen.getByTestId('sidebar')).toBeInTheDocument();
   });
 
   it('renders skip-to-content link', () => {
-    render(<AppShell><div>Content</div></AppShell>);
+    render(
+      <AppShell>
+        <div>Content</div>
+      </AppShell>,
+    );
     const skipLink = screen.getByText('Skip to content');
     expect(skipLink).toBeInTheDocument();
     expect(skipLink).toHaveAttribute('href', '#main-content');
   });
 
   it('renders main content with correct id', () => {
-    render(<AppShell><div>Main Content</div></AppShell>);
+    render(
+      <AppShell>
+        <div>Main Content</div>
+      </AppShell>,
+    );
     const main = screen.getByRole('main');
     expect(main).toHaveAttribute('id', 'main-content');
     expect(screen.getByText('Main Content')).toBeInTheDocument();

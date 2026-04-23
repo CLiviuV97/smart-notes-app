@@ -27,11 +27,7 @@ const ToastRoot = forwardRef<
   React.ComponentRef<typeof ToastPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitive.Root> & VariantProps<typeof toastVariants>
 >(({ className, variant, ...props }, ref) => (
-  <ToastPrimitive.Root
-    ref={ref}
-    className={cn(toastVariants({ variant }), className)}
-    {...props}
-  />
+  <ToastPrimitive.Root ref={ref} className={cn(toastVariants({ variant }), className)} {...props} />
 ));
 ToastRoot.displayName = 'ToastRoot';
 
@@ -72,11 +68,7 @@ const ToastTitle = forwardRef<
   React.ComponentRef<typeof ToastPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitive.Title>
 >(({ className, ...props }, ref) => (
-  <ToastPrimitive.Title
-    ref={ref}
-    className={cn('text-sm font-semibold', className)}
-    {...props}
-  />
+  <ToastPrimitive.Title ref={ref} className={cn('text-sm font-semibold', className)} {...props} />
 ));
 ToastTitle.displayName = 'ToastTitle';
 

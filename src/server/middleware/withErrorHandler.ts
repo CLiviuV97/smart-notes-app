@@ -25,7 +25,12 @@ export function withErrorHandler(handler: RouteHandler): RouteHandler {
         );
       }
 
-      logger.error('Unhandled API error', { error: error instanceof Error ? { message: error.message, stack: error.stack } : { value: String(error) } });
+      logger.error('Unhandled API error', {
+        error:
+          error instanceof Error
+            ? { message: error.message, stack: error.stack }
+            : { value: String(error) },
+      });
       return NextResponse.json<ApiErrorResponse>(
         { error: 'INTERNAL', message: 'Internal server error' },
         { status: 500 },

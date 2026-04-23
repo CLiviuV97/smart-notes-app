@@ -109,7 +109,11 @@ export function PdfImportModal({ open, onOpenChange }: PdfImportModalProps) {
       router.push(`/notes/${note.id}`);
       handleClose(false);
     } catch {
-      toast({ title: 'Save failed', description: 'Could not create note. Please try again.', variant: 'error' });
+      toast({
+        title: 'Save failed',
+        description: 'Could not create note. Please try again.',
+        variant: 'error',
+      });
       setStage('preview');
     }
   };
@@ -126,7 +130,11 @@ export function PdfImportModal({ open, onOpenChange }: PdfImportModalProps) {
       } else if (error?.code === 'file-invalid-type') {
         toast({ title: 'Invalid file', description: 'File must be a PDF', variant: 'error' });
       } else {
-        toast({ title: 'Upload error', description: error?.message ?? 'Invalid file', variant: 'error' });
+        toast({
+          title: 'Upload error',
+          description: error?.message ?? 'Invalid file',
+          variant: 'error',
+        });
       }
     },
     disabled: stage !== 'idle',
@@ -184,11 +192,16 @@ export function PdfImportModal({ open, onOpenChange }: PdfImportModalProps) {
                 <div className="mt-4 flex flex-wrap justify-center gap-2 text-[11px] text-muted-foreground">
                   <span className="rounded-full border border-border px-2 py-0.5">AI Summary</span>
                   <span className="rounded-full border border-border px-2 py-0.5">Auto Tags</span>
-                  <span className="rounded-full border border-border px-2 py-0.5">Key Highlights</span>
-                  <span className="rounded-full border border-border px-2 py-0.5">Smart Sections</span>
+                  <span className="rounded-full border border-border px-2 py-0.5">
+                    Key Highlights
+                  </span>
+                  <span className="rounded-full border border-border px-2 py-0.5">
+                    Smart Sections
+                  </span>
                 </div>
                 <p className="mt-2 max-w-xs text-center text-[11px] leading-relaxed text-muted-foreground/70">
-                  AI analyzes your PDF and extracts a summary, tags, key highlights, and organized sections — ready to save as a note.
+                  AI analyzes your PDF and extracts a summary, tags, key highlights, and organized
+                  sections — ready to save as a note.
                 </p>
               </div>
             )}
@@ -206,7 +219,10 @@ export function PdfImportModal({ open, onOpenChange }: PdfImportModalProps) {
               <div className="space-y-4">
                 {/* Title */}
                 <div>
-                  <label htmlFor="pdf-title" className="mb-1 block text-sm font-medium text-foreground">
+                  <label
+                    htmlFor="pdf-title"
+                    className="mb-1 block text-sm font-medium text-foreground"
+                  >
                     Title
                   </label>
                   <input

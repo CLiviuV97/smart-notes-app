@@ -55,7 +55,13 @@ class InMemoryNotesRepository implements INotesRepository {
 
   async update(
     id: string,
-    patch: { title?: string; content?: string; summary?: string; tags?: string[]; aiGeneratedAt?: string },
+    patch: {
+      title?: string;
+      content?: string;
+      summary?: string;
+      tags?: string[];
+      aiGeneratedAt?: string;
+    },
   ): Promise<Note> {
     const existing = this.store.get(id)!;
     const updated: Note = {
@@ -107,6 +113,7 @@ describe('NotesService', () => {
   describe('getById', () => {
     it('returns the note when owner matches', async () => {
       const created = await service.create('user-1', { title: 'Mine', content: 'text' });
+      // eslint-disable-next-line testing-library/no-await-sync-queries -- not a testing-library query
       const found = await service.getById('user-1', created.id);
       expect(found.id).toBe(created.id);
     });
@@ -139,10 +146,12 @@ describe('NotesService', () => {
 
     it('throws FORBIDDEN when owner does not match', async () => {
       const created = await service.create('user-1', { title: 'X', content: '' });
-      await expect(service.update('user-2', created.id, { title: 'Hacked' })).rejects.toMatchObject({
-        code: 'FORBIDDEN',
-        status: 403,
-      });
+      await expect(service.update('user-2', created.id, { title: 'Hacked' })).rejects.toMatchObject(
+        {
+          code: 'FORBIDDEN',
+          status: 403,
+        },
+      );
     });
   });
 

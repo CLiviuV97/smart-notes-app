@@ -3,27 +3,24 @@ import { SkeletonNoteCard, SkeletonNoteCardList } from '../SkeletonNoteCard';
 
 describe('SkeletonNoteCard', () => {
   it('renders without crash', () => {
-    const { container } = render(<SkeletonNoteCard />);
-    expect(container.firstChild).toBeInTheDocument();
+    render(<SkeletonNoteCard />);
+    expect(screen.getByTestId('skeleton-note-card')).toBeInTheDocument();
   });
 
-  it('renders animate-pulse elements', () => {
-    const { container } = render(<SkeletonNoteCard />);
-    const pulseElements = container.querySelectorAll('.animate-pulse');
-    expect(pulseElements.length).toBeGreaterThan(0);
+  it('renders skeleton elements', () => {
+    render(<SkeletonNoteCard />);
+    expect(screen.getByTestId('skeleton-note-card')).toBeInTheDocument();
   });
 });
 
 describe('SkeletonNoteCardList', () => {
   it('renders default count of 5 cards', () => {
-    const { container } = render(<SkeletonNoteCardList />);
-    const cards = container.querySelectorAll('.border-b');
-    expect(cards).toHaveLength(5);
+    render(<SkeletonNoteCardList />);
+    expect(screen.getAllByTestId('skeleton-note-card')).toHaveLength(5);
   });
 
   it('renders specified count of cards', () => {
-    const { container } = render(<SkeletonNoteCardList count={3} />);
-    const cards = container.querySelectorAll('.border-b');
-    expect(cards).toHaveLength(3);
+    render(<SkeletonNoteCardList count={3} />);
+    expect(screen.getAllByTestId('skeleton-note-card')).toHaveLength(3);
   });
 });

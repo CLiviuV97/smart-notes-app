@@ -105,7 +105,10 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
         <span className="flex items-center gap-1.5 font-mono text-[10.5px] uppercase text-ink-3">
           {saveStatus === 'saving' && (
             <>
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-ink-4" style={{ animation: 'pulseDot 1s ease-in-out infinite' }} />
+              <span
+                className="inline-block h-1.5 w-1.5 rounded-full bg-ink-4"
+                style={{ animation: 'pulseDot 1s ease-in-out infinite' }}
+              />
               Saving
             </>
           )}
@@ -128,7 +131,12 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
       />
 
       <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-ink-3">
-        {new Date(note.updatedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+        {new Date(note.updatedAt).toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })}
       </p>
 
       <textarea
@@ -144,7 +152,9 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
         <div className="space-y-4 border-t border-dashed border-rule pt-5">
           {note.tags.length > 0 && (
             <div>
-              <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-wider text-ink-3">Tags</p>
+              <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-wider text-ink-3">
+                Tags
+              </p>
               <div className="flex flex-wrap gap-1.5">
                 {note.tags.map((tag) => (
                   <span
@@ -163,7 +173,9 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
                 <Sparkles className="h-3 w-3" />
                 AI Summary
               </p>
-              <p className="font-serif text-[17px] italic leading-[1.55] text-ink-2">{note.summary}</p>
+              <p className="font-serif text-[17px] italic leading-[1.55] text-ink-2">
+                {note.summary}
+              </p>
             </div>
           )}
         </div>

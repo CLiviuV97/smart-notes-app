@@ -111,7 +111,10 @@ export class GeminiSummaryService implements IAISummaryService {
 
   private parseResponse(raw: string): AIResponse | null {
     try {
-      const cleaned = raw.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+      const cleaned = raw
+        .replace(/^```(?:json)?\s*\n?/i, '')
+        .replace(/\n?```\s*$/i, '')
+        .trim();
       const json = JSON.parse(cleaned);
       return aiResponseSchema.parse(json);
     } catch {

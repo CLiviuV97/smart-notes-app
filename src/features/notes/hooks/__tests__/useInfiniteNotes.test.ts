@@ -99,10 +99,9 @@ describe('useInfiniteNotes', () => {
     });
     rerender();
 
-    expect(global.IntersectionObserver).toHaveBeenCalledWith(
-      expect.any(Function),
-      { rootMargin: '200px' },
-    );
+    expect(global.IntersectionObserver).toHaveBeenCalledWith(expect.any(Function), {
+      rootMargin: '200px',
+    });
     expect(observerInstance.observe).toHaveBeenCalledWith(div);
   });
 

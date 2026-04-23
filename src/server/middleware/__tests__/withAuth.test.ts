@@ -48,11 +48,7 @@ describe('withAuth', () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.uid).toBe('user-123');
-    expect(mockHandler).toHaveBeenCalledWith(
-      req,
-      {},
-      { uid: 'user-123', email: 'test@test.com' },
-    );
+    expect(mockHandler).toHaveBeenCalledWith(req, {}, { uid: 'user-123', email: 'test@test.com' });
   });
 
   it('throws AppError on invalid token', async () => {

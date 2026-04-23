@@ -16,7 +16,7 @@ const mockNote = {
 const mockUpdateNote = jest.fn().mockReturnValue({ unwrap: () => Promise.resolve(mockNote) });
 
 jest.mock('@/features/notes/api/notesApi', () => ({
-  useGetNoteQuery: (id: string) => ({
+  useGetNoteQuery: () => ({
     data: mockNote,
     isLoading: false,
   }),

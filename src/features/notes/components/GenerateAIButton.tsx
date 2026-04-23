@@ -39,7 +39,10 @@ export function GenerateAIButton({ noteId }: GenerateAIButtonProps) {
 
   if (showSuccess) {
     return (
-      <button disabled className="flex items-center gap-1.5 rounded-[6px] bg-ok/10 px-2.5 py-1.5 text-[12px] font-medium text-ok">
+      <button
+        disabled
+        className="flex items-center gap-1.5 rounded-[6px] bg-ok/10 px-2.5 py-1.5 text-[12px] font-medium text-ok"
+      >
         <Check className="h-3.5 w-3.5" />
         Done
       </button>

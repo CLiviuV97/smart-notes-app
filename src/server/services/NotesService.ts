@@ -7,7 +7,10 @@ import type { CreateNoteInput } from '@/lib/validators/noteSchemas';
 export class NotesService {
   constructor(private repo: INotesRepository) {}
 
-  async list(uid: string, opts: { limit: number; cursor?: string }): Promise<PaginatedResult<Note>> {
+  async list(
+    uid: string,
+    opts: { limit: number; cursor?: string },
+  ): Promise<PaginatedResult<Note>> {
     return this.repo.findByOwner(uid, opts);
   }
 

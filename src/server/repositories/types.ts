@@ -7,8 +7,12 @@ export interface INotesRepository {
   ): Promise<PaginatedResult<Note>>;
   findById(id: string): Promise<Note | null>;
   create(data: {
-    ownerId: string; title: string; content: string;
-    summary?: string | null; tags?: string[]; aiGeneratedAt?: string | null;
+    ownerId: string;
+    title: string;
+    content: string;
+    summary?: string | null;
+    tags?: string[];
+    aiGeneratedAt?: string | null;
   }): Promise<Note>;
   update(
     id: string,

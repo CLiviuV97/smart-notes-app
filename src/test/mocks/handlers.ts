@@ -38,10 +38,7 @@ export const handlers = [
   http.get('/api/notes/:id', ({ params }) => {
     const note = mockNotes.find((n) => n.id === params.id);
     if (!note) {
-      return HttpResponse.json(
-        { error: 'NOT_FOUND', message: 'Note not found' },
-        { status: 404 },
-      );
+      return HttpResponse.json({ error: 'NOT_FOUND', message: 'Note not found' }, { status: 404 });
     }
     return HttpResponse.json(note);
   }),
@@ -68,10 +65,7 @@ export const handlers = [
   http.post('/api/notes/:id/ai-summary', ({ params }) => {
     const note = mockNotes.find((n) => n.id === params.id);
     if (!note) {
-      return HttpResponse.json(
-        { error: 'NOT_FOUND', message: 'Note not found' },
-        { status: 404 },
-      );
+      return HttpResponse.json({ error: 'NOT_FOUND', message: 'Note not found' }, { status: 404 });
     }
     return HttpResponse.json({
       ...note,

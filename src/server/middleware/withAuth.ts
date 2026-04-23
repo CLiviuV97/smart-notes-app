@@ -3,11 +3,7 @@ import { adminAuth } from '@/lib/firebase/admin';
 import { AppError } from '@/server/errors/AppError';
 import type { AuthUser, ApiErrorResponse } from '@/types/api';
 
-type AuthenticatedHandler = (
-  req: Request,
-  ctx: unknown,
-  user: AuthUser,
-) => Promise<Response>;
+type AuthenticatedHandler = (req: Request, ctx: unknown, user: AuthUser) => Promise<Response>;
 
 export function withAuth(handler: AuthenticatedHandler) {
   return async (req: Request, ctx: unknown): Promise<Response> => {

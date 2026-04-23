@@ -13,9 +13,7 @@ function redact(obj: unknown): unknown {
   if (obj === null || obj === undefined) return obj;
 
   if (typeof obj === 'string') {
-    return obj.length > MAX_STRING_LENGTH
-      ? obj.slice(0, MAX_STRING_LENGTH) + '[TRUNCATED]'
-      : obj;
+    return obj.length > MAX_STRING_LENGTH ? obj.slice(0, MAX_STRING_LENGTH) + '[TRUNCATED]' : obj;
   }
 
   if (Array.isArray(obj)) {

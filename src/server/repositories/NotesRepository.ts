@@ -37,8 +37,12 @@ class NotesRepository implements INotesRepository {
   }
 
   async create(data: {
-    ownerId: string; title: string; content: string;
-    summary?: string | null; tags?: string[]; aiGeneratedAt?: string | null;
+    ownerId: string;
+    title: string;
+    content: string;
+    summary?: string | null;
+    tags?: string[];
+    aiGeneratedAt?: string | null;
   }): Promise<Note> {
     const ref = await this.collection.add({
       ownerId: data.ownerId,
@@ -95,11 +99,11 @@ class NotesRepository implements INotesRepository {
       createdAt:
         data.createdAt instanceof Timestamp
           ? data.createdAt.toDate().toISOString()
-          : data.createdAt ?? new Date().toISOString(),
+          : (data.createdAt ?? new Date().toISOString()),
       updatedAt:
         data.updatedAt instanceof Timestamp
           ? data.updatedAt.toDate().toISOString()
-          : data.updatedAt ?? new Date().toISOString(),
+          : (data.updatedAt ?? new Date().toISOString()),
     };
   }
 }
