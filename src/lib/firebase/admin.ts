@@ -6,6 +6,7 @@ function getApp(): App {
   if (getApps().length) {
     return getApps()[0]!;
   }
+
   return initializeApp({
     credential: cert({
       projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
