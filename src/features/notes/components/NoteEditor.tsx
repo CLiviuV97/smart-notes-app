@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Sparkles } from 'lucide-react';
 import { useGetNoteQuery, useUpdateNoteMutation } from '@/features/notes/api/notesApi';
 import { useAppDispatch } from '@/store';
 import { setEditorDirty } from '@/features/notes/store/notesUiSlice';
@@ -91,19 +92,30 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
 
   if (!note) {
     return (
-      <div className="flex h-full items-center justify-center text-muted-foreground">
+      <div className="flex h-full items-center justify-center font-serif italic text-ink-3">
         Note not found
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4 p-6">
-      {/* Save indicator */}
-      <div className="flex justify-end">
-        <span className="text-xs text-muted-foreground">
-          {saveStatus === 'saving' && 'Saving...'}
-          {saveStatus === 'saved' && 'Saved'}
+    <div className="mx-auto max-w-[720px] space-y-4 px-20 py-14 font-serif max-md:px-5">
+      {/* Save indicator — fixed height to prevent layout shift */}
+      <div className="flex h-5 items-center justify-end">
+        <span className="flex items-center gap-1.5 font-mono text-[10.5px] uppercase text-ink-3">
+          {saveStatus === 'saving' && (
+            <>
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-ink-4" style={{ animation: 'pulseDot 1s ease-in-out infinite' }} />
+              Saving
+            </>
+          )}
+          {saveStatus === 'saved' && (
+            <>
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-ok" />
+              Saved
+            </>
+          )}
+          {saveStatus === 'idle' && <>&nbsp;</>}
         </span>
       </div>
 
@@ -112,36 +124,46 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
         value={title}
         onChange={handleTitleChange}
         placeholder="Note title"
-        className="w-full border-none bg-transparent text-2xl font-bold text-foreground placeholder:text-muted-foreground focus:outline-none"
+        className="w-full border-none bg-transparent text-[40px] font-medium leading-[1.12] tracking-[-0.02em] text-ink placeholder:text-ink-4 focus:outline-none"
       />
+
+      <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-ink-3">
+        {new Date(note.updatedAt).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+      </p>
 
       <textarea
         ref={textareaRef}
         value={content}
         onChange={handleContentChange}
         placeholder="Start writing..."
-        className="min-h-[300px] w-full resize-none border-none bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none"
+        className="min-h-[300px] w-full resize-none border-none bg-transparent text-[17px] leading-[1.55] text-ink placeholder:text-ink-3 focus:outline-none"
       />
 
-      {/* Metadata */}
+      {/* Tags + Summary */}
       {(note.tags.length > 0 || note.summary) && (
-        <div className="space-y-3 border-t border-border pt-4">
+        <div className="space-y-4 border-t border-dashed border-rule pt-5">
           {note.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {note.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary"
-                >
-                  {tag}
-                </span>
-              ))}
+            <div>
+              <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-wider text-ink-3">Tags</p>
+              <div className="flex flex-wrap gap-1.5">
+                {note.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="inline-flex rounded-full border border-rule bg-paper-2 px-2.5 py-0.5 font-sans text-[11px] text-ink-2"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
           {note.summary && (
-            <div className="rounded-md bg-surface p-3">
-              <p className="text-xs font-medium text-muted-foreground">AI Summary</p>
-              <p className="mt-1 text-sm text-surface-foreground">{note.summary}</p>
+            <div className="rounded-[5px] border-l-2 border-margin-red bg-paper-2 px-4 py-3">
+              <p className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-wider text-accent">
+                <Sparkles className="h-3 w-3" />
+                AI Summary
+              </p>
+              <p className="font-serif text-[17px] italic leading-[1.55] text-ink-2">{note.summary}</p>
             </div>
           )}
         </div>

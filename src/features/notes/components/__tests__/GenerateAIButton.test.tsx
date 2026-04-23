@@ -27,9 +27,9 @@ describe('GenerateAIButton', () => {
     jest.clearAllMocks();
   });
 
-  it('shows idle state with "Generate Summary" text', () => {
+  it('shows idle state with "AI Summary" text', () => {
     render(<GenerateAIButton noteId="1" />);
-    expect(screen.getByText('Generate Summary')).toBeInTheDocument();
+    expect(screen.getByText('AI Summary')).toBeInTheDocument();
     expect(screen.getByTestId('sparkles')).toBeInTheDocument();
   });
 
@@ -38,7 +38,7 @@ describe('GenerateAIButton', () => {
     const user = userEvent.setup();
 
     render(<GenerateAIButton noteId="1" />);
-    await user.click(screen.getByText('Generate Summary'));
+    await user.click(screen.getByText('AI Summary'));
 
     await waitFor(() => {
       expect(screen.getByText('Done')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('GenerateAIButton', () => {
     const user = userEvent.setup();
 
     render(<GenerateAIButton noteId="1" />);
-    await user.click(screen.getByText('Generate Summary'));
+    await user.click(screen.getByText('AI Summary'));
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith(

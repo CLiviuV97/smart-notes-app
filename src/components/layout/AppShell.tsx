@@ -16,7 +16,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <div className="flex h-screen overflow-hidden">
         {/* Desktop sidebar */}
-        <aside className="hidden w-[280px] shrink-0 md:block">
+        <aside className="hidden w-[280px] shrink-0 border-r border-rule md:block">
           <Sidebar />
         </aside>
 
@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               className="absolute inset-0 bg-black/50 animate-fade-in"
               onClick={() => setIsSidebarOpen(false)}
             />
-            <aside className="relative z-50 h-full w-[280px] animate-scale-in">
+            <aside className="relative z-50 h-full w-[280px] animate-scale-in border-r border-rule">
               <Sidebar onClose={() => setIsSidebarOpen(false)} />
             </aside>
           </div>
@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Main pane */}
         <div className="flex flex-1 flex-col overflow-hidden">
           {/* Mobile header */}
-          <div className="flex items-center border-b border-border p-2 md:hidden">
+          <div className="flex items-center border-b border-rule px-3 py-2 md:hidden">
             <Button
               variant="ghost"
               size="sm"
@@ -45,7 +45,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <span className="ml-2 text-sm font-semibold text-foreground">Notes</span>
+            <span className="ml-2 font-serif text-[18px] italic font-semibold text-ink">Smart Notes</span>
           </div>
 
           <main id="main-content" className="flex-1 overflow-y-auto">

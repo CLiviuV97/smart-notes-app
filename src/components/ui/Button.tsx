@@ -7,14 +7,14 @@ import { cn } from '@/lib/utils/cn';
 import { Spinner } from './Spinner';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center gap-2 rounded-[7px] text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary-hover',
-        destructive: 'bg-danger text-danger-foreground hover:bg-danger/90',
-        outline: 'border border-border bg-transparent hover:bg-surface text-foreground',
-        ghost: 'hover:bg-surface text-foreground',
+        default: 'bg-ink text-paper hover:opacity-90',
+        destructive: 'bg-margin-red text-white hover:opacity-90',
+        outline: 'border border-rule-2 bg-transparent hover:bg-paper-2 text-ink-2',
+        ghost: 'hover:bg-paper-3 text-ink-2',
       },
       size: {
         sm: 'h-8 px-3 text-xs',

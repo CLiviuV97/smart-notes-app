@@ -17,13 +17,13 @@ describe('SkeletonNoteCard', () => {
 describe('SkeletonNoteCardList', () => {
   it('renders default count of 5 cards', () => {
     const { container } = render(<SkeletonNoteCardList />);
-    const cards = container.querySelectorAll('.rounded-lg.border');
+    const cards = container.querySelectorAll('.border-b');
     expect(cards).toHaveLength(5);
   });
 
   it('renders specified count of cards', () => {
     const { container } = render(<SkeletonNoteCardList count={3} />);
-    const cards = container.querySelectorAll('.rounded-lg.border');
+    const cards = container.querySelectorAll('.border-b');
     expect(cards).toHaveLength(3);
   });
 });
