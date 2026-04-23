@@ -8,6 +8,7 @@ import { setUser, setIdToken, clearAuth, setLoading } from '@/features/auth/stor
 import { onAuthChange, onTokenChange } from '@/features/auth/services/authClient';
 import type { SerializedUser } from '@/types/api';
 import { ToastProvider } from '@/components/ui/ToastProvider';
+import { useErrorReporter } from '@/lib/hooks/useErrorReporter';
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const dispatch = useAppDispatch();
@@ -59,6 +60,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
       return unsubscribe;
     }
   }, [store.dispatch]);
+
+  useErrorReporter();
 
   return (
     <ReduxProvider store={store}>
