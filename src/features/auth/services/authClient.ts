@@ -12,7 +12,7 @@ import {
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase/client';
 
-setPersistence(auth, browserLocalPersistence);
+setPersistence(auth, browserLocalPersistence).catch(console.warn);
 
 const googleProvider = new GoogleAuthProvider();
 
