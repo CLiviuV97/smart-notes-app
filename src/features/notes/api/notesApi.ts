@@ -31,7 +31,14 @@ export const notesApi = createApi({
         return `/notes${qs ? `?${qs}` : ''}`;
       },
       serializeQueryArgs: ({ endpointName }) => endpointName,
-      merge: (currentCache, newItems) => {
+      merge: (currentCache, newItems, { arg }) => {
+        if (!arg.cursor) {
+          // Refetch from start (invalidation) — replace entirely
+          currentCache.items = newItems.items;
+          currentCache.nextCursor = newItems.nextCursor;
+          return;
+        }
+        // Pagination load — append unique
         const existingIds = new Set(currentCache.items.map((n) => n.id));
         const unique = newItems.items.filter((n) => !existingIds.has(n.id));
         currentCache.items.push(...unique);
@@ -84,8 +91,14 @@ export const notesApi = createApi({
         );
         const patchList = dispatch(
           notesApi.util.updateQueryData('listNotes', 'listNotes' as never, (draft) => {
-            const note = draft.items.find((n) => n.id === id);
-            if (note) Object.assign(note, patch);
+            const idx = draft.items.findIndex((n) => n.id === id);
+            const item = draft.items[idx];
+            if (item) {
+              Object.assign(item, patch, { updatedAt: new Date().toISOString() });
+              // Move to top (list is sorted by updatedAt desc)
+              draft.items.splice(idx, 1);
+              draft.items.unshift(item);
+            }
           }),
         );
         try {
@@ -106,6 +119,18 @@ export const notesApi = createApi({
         url: `/notes/${id}`,
         method: 'DELETE',
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patchList = dispatch(
+          notesApi.util.updateQueryData('listNotes', 'listNotes' as never, (draft) => {
+            draft.items = draft.items.filter((n) => n.id !== id);
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchList.undo();
+        }
+      },
       invalidatesTags: (_result, _error, id) => [
         { type: 'Note', id },
         { type: 'Notes', id: 'LIST' },

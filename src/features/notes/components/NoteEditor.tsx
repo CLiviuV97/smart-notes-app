@@ -130,14 +130,39 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
         className="w-full border-none bg-transparent text-[40px] font-medium leading-[1.12] tracking-[-0.02em] text-ink placeholder:text-ink-4 focus:outline-none"
       />
 
-      <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-ink-3">
-        {new Date(note.updatedAt).toLocaleDateString('en-US', {
-          weekday: 'short',
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        })}
-      </p>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+        <span className="font-mono text-[11px] uppercase tracking-[0.06em] text-ink-3">
+          {new Date(note.updatedAt).toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+        </span>
+        {note.tags.length > 0 && (
+          <>
+            <span className="text-ink-4">|</span>
+            {note.tags.map((tag) => (
+              <span
+                key={tag}
+                className="inline-flex rounded-full border border-rule bg-paper-2 px-2.5 py-0.5 font-sans text-[11px] text-ink-2"
+              >
+                {tag}
+              </span>
+            ))}
+          </>
+        )}
+      </div>
+
+      {note.summary && (
+        <div className="rounded-[5px] border-l-2 border-margin-red bg-paper-2 px-4 py-3">
+          <p className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-wider text-accent">
+            <Sparkles className="h-3 w-3" />
+            AI Summary
+          </p>
+          <p className="font-serif text-[14px] italic leading-[1.55] text-ink-2">{note.summary}</p>
+        </div>
+      )}
 
       <textarea
         ref={textareaRef}
@@ -146,40 +171,6 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
         placeholder="Start writing..."
         className="min-h-[300px] w-full resize-none border-none bg-transparent text-[17px] leading-[1.55] text-ink placeholder:text-ink-3 focus:outline-none"
       />
-
-      {/* Tags + Summary */}
-      {(note.tags.length > 0 || note.summary) && (
-        <div className="space-y-4 border-t border-dashed border-rule pt-5">
-          {note.tags.length > 0 && (
-            <div>
-              <p className="mb-2 font-mono text-[10px] font-medium uppercase tracking-wider text-ink-3">
-                Tags
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {note.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="inline-flex rounded-full border border-rule bg-paper-2 px-2.5 py-0.5 font-sans text-[11px] text-ink-2"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-          {note.summary && (
-            <div className="rounded-[5px] border-l-2 border-margin-red bg-paper-2 px-4 py-3">
-              <p className="mb-1.5 flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-wider text-accent">
-                <Sparkles className="h-3 w-3" />
-                AI Summary
-              </p>
-              <p className="font-serif text-[17px] italic leading-[1.55] text-ink-2">
-                {note.summary}
-              </p>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }
