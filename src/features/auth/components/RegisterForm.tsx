@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { registerWithEmail } from '@/features/auth/services/authClient';
 import { firebaseErrorMessage } from '@/features/auth/utils/firebaseErrors';
@@ -20,7 +19,6 @@ const registerSchema = z
   });
 
 export function RegisterForm() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -47,10 +45,8 @@ export function RegisterForm() {
     setLoading(true);
     try {
       await registerWithEmail(email, password);
-      router.push('/notes');
     } catch (err) {
       setError(firebaseErrorMessage(err, 'Registration failed. Please try again.'));
-    } finally {
       setLoading(false);
     }
   }

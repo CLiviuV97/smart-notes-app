@@ -1,13 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { loginWithGoogle } from '@/features/auth/services/authClient';
 import { firebaseErrorMessage } from '@/features/auth/utils/firebaseErrors';
 import { Button } from '@/components/ui/Button';
 
 export function GoogleSignInButton() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,10 +15,8 @@ export function GoogleSignInButton() {
 
     try {
       await loginWithGoogle();
-      router.push('/notes');
     } catch (err) {
       setError(firebaseErrorMessage(err, 'Google sign-in failed.'));
-    } finally {
       setLoading(false);
     }
   }

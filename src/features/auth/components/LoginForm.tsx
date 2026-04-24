@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { loginWithEmail } from '@/features/auth/services/authClient';
 import { firebaseErrorMessage } from '@/features/auth/utils/firebaseErrors';
@@ -14,7 +13,6 @@ const loginSchema = z.object({
 });
 
 export function LoginForm() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -40,10 +38,8 @@ export function LoginForm() {
     setLoading(true);
     try {
       await loginWithEmail(email, password);
-      router.push('/notes');
     } catch (err) {
       setError(firebaseErrorMessage(err, 'Login failed. Please try again.'));
-    } finally {
       setLoading(false);
     }
   }

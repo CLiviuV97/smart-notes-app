@@ -16,7 +16,7 @@ export function GenerateAIButton({ noteId }: GenerateAIButtonProps) {
 
   useEffect(() => {
     if (showSuccess) {
-      const timer = setTimeout(() => setShowSuccess(false), 2000);
+      const timer = setTimeout(() => setShowSuccess(false), 10000);
       return () => clearTimeout(timer);
     }
   }, [showSuccess]);

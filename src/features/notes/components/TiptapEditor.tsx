@@ -49,6 +49,7 @@ interface TiptapEditorProps {
 
 export function TiptapEditor({ content, onChange, className }: TiptapEditorProps) {
   const lastNoteContent = useRef(content);
+  const isSyncing = useRef(false);
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -72,6 +73,7 @@ export function TiptapEditor({ content, onChange, className }: TiptapEditorProps
       },
     },
     onUpdate: ({ editor: ed }) => {
+      if (isSyncing.current) return;
       const md = htmlToMarkdown(ed.getHTML());
       lastNoteContent.current = md;
       onChange(md);
@@ -82,7 +84,9 @@ export function TiptapEditor({ content, onChange, className }: TiptapEditorProps
   useEffect(() => {
     if (editor && content !== lastNoteContent.current) {
       lastNoteContent.current = content;
-      editor.commands.setContent(markdownToHtml(content));
+      isSyncing.current = true;
+      editor.commands.setContent(markdownToHtml(content), { emitUpdate: false });
+      isSyncing.current = false;
     }
   }, [content, editor]);
 

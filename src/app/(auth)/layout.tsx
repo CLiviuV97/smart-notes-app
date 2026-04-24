@@ -1,19 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuthSession } from '@/features/auth/hooks/useAuthSession';
+import { useAuthRedirect } from '@/features/auth/hooks/useAuthRedirect';
 import { Spinner } from '@/components/ui/Spinner';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
-  const { isLoading, isAuthenticated } = useAuthSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      router.replace('/notes');
-    }
-  }, [isLoading, isAuthenticated, router]);
+  const { isLoading, shouldRender } = useAuthRedirect({
+    require: 'unauthenticated',
+    redirectTo: '/notes',
+  });
 
   if (isLoading) {
     return (
@@ -23,7 +17,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
     );
   }
 
-  if (isAuthenticated) {
+  if (!shouldRender) {
     return null;
   }
 
