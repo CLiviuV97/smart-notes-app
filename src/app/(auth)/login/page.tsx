@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { LoginForm } from '@/features/auth/components/LoginForm';
 import { GoogleSignInButton } from '@/features/auth/components/GoogleSignInButton';
 
@@ -23,13 +22,6 @@ export default function LoginPage() {
         </div>
 
         <GoogleSignInButton />
-
-        <p className="text-center text-sm text-ink-2">
-          Don&apos;t have an account?{' '}
-          <Link href="/register" className="font-medium text-accent hover:underline">
-            Register
-          </Link>
-        </p>
       </div>
     </div>
   );

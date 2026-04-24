@@ -6,6 +6,7 @@ import { useGetNoteQuery, useUpdateNoteMutation } from '@/features/notes/api/not
 import { useAppDispatch } from '@/store';
 import { setEditorDirty } from '@/features/notes/store/notesUiSlice';
 import { Spinner } from '@/components/ui/Spinner';
+import { TiptapEditor } from './TiptapEditor';
 
 interface NoteEditorProps {
   noteId: string;
@@ -21,7 +22,6 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const initializedForRef = useRef<string | null>(null);
 
   // Sync from server — only on note switch or initial load
@@ -33,15 +33,6 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
       setSaveStatus('idle');
     }
   }, [note, noteId]);
-
-  // Auto-resize textarea
-  useEffect(() => {
-    const ta = textareaRef.current;
-    if (ta) {
-      ta.style.height = 'auto';
-      ta.style.height = `${ta.scrollHeight}px`;
-    }
-  }, [content]);
 
   const debouncedSave = useCallback(
     (patch: { title?: string; content?: string }) => {
@@ -76,11 +67,13 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
     debouncedSave({ title: newTitle, content });
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newContent = e.target.value;
-    setContent(newContent);
-    debouncedSave({ title, content: newContent });
-  };
+  const handleContentChange = useCallback(
+    (newContent: string) => {
+      setContent(newContent);
+      debouncedSave({ title, content: newContent });
+    },
+    [title, debouncedSave],
+  );
 
   if (isLoading) {
     return (
@@ -164,12 +157,10 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
         </div>
       )}
 
-      <textarea
-        ref={textareaRef}
-        value={content}
+      <TiptapEditor
+        content={content}
         onChange={handleContentChange}
-        placeholder="Start writing..."
-        className="min-h-[300px] w-full resize-none border-none bg-transparent text-[17px] leading-[1.55] text-ink placeholder:text-ink-3 focus:outline-none"
+        className="tiptap-editor min-h-[300px] w-full text-[17px] leading-[1.55] text-ink"
       />
     </div>
   );

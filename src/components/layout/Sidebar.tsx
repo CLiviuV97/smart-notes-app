@@ -13,6 +13,7 @@ import {
 import { useInfiniteNotes } from '@/features/notes/hooks/useInfiniteNotes';
 import { useCreateNoteMutation } from '@/features/notes/api/notesApi';
 import { useAuthSession } from '@/features/auth/hooks/useAuthSession';
+import { NotePreview } from '@/features/notes/components/NotePreview';
 import { logout } from '@/features/auth/services/authClient';
 import { SkeletonNoteCardList } from '@/features/notes/components/SkeletonNoteCard';
 import { Button } from '@/components/ui/Button';
@@ -141,9 +142,11 @@ export function Sidebar({ onClose }: SidebarProps) {
             <p className="truncate font-serif text-[15px] font-medium leading-tight tracking-[-0.005em] text-ink">
               {note.title}
             </p>
-            <p className="mt-1 line-clamp-2 font-serif text-[13px] leading-[1.4] text-ink-2">
-              {note.content.slice(0, 80)}
-            </p>
+            <NotePreview
+              content={note.content}
+              maxLength={80}
+              className="mt-1 line-clamp-2 font-serif text-[13px] leading-[1.4] text-ink-2"
+            />
             <div className="mt-2 flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-[0.04em] text-ink-3">
               <span>
                 {new Date(note.updatedAt).toLocaleDateString('en-US', {

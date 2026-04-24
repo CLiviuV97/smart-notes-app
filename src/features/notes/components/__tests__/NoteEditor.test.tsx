@@ -43,12 +43,10 @@ describe('NoteEditor', () => {
     jest.useRealTimers();
   });
 
-  it('renders title input and content textarea with note data', () => {
+  it('renders title input and content with note data', () => {
     render(<NoteEditor noteId="1" />);
-    const titleInput = screen.getByDisplayValue('Test Note');
-    const contentArea = screen.getByDisplayValue('Test content here');
-    expect(titleInput).toBeInTheDocument();
-    expect(contentArea).toBeInTheDocument();
+    expect(screen.getByDisplayValue('Test Note')).toBeInTheDocument();
+    expect(screen.getByText('Test content here')).toBeInTheDocument();
   });
 
   it('triggers debounced save on typing', async () => {

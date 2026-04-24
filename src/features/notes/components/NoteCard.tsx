@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 import type { Note } from '@/types/note';
+import { NotePreview } from './NotePreview';
 
 interface NoteCardProps {
   note: Note;
@@ -15,9 +16,10 @@ export function NoteCard({ note }: NoteCardProps) {
       className="block animate-fade-up rounded-[7px] border border-rule p-4 transition hover:border-rule-2 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
     >
       <h3 className="font-serif text-[17px] font-medium text-ink">{note.title}</h3>
-      <p className="mt-1 line-clamp-2 font-serif text-[14px] leading-snug text-ink-2">
-        {note.content}
-      </p>
+      <NotePreview
+        content={note.content}
+        className="mt-1 line-clamp-2 font-serif text-[14px] leading-snug text-ink-2"
+      />
       {note.tags.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
           {note.tags.map((tag) => (
