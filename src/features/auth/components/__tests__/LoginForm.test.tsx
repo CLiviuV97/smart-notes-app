@@ -2,12 +2,6 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LoginForm } from '../LoginForm';
 
-// Mock next/navigation
-const mockPush = jest.fn();
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({ push: mockPush }),
-}));
-
 // Mock authClient
 const mockLoginWithEmail = jest.fn();
 jest.mock('@/features/auth/services/authClient', () => ({
@@ -38,7 +32,7 @@ describe('LoginForm', () => {
     expect(mockLoginWithEmail).not.toHaveBeenCalled();
   });
 
-  it('calls loginWithEmail and navigates on success', async () => {
+  it('calls loginWithEmail and stays loading on success (layout handles redirect)', async () => {
     mockLoginWithEmail.mockResolvedValue({});
     const user = userEvent.setup();
     render(<LoginForm />);
@@ -51,7 +45,7 @@ describe('LoginForm', () => {
       expect(mockLoginWithEmail).toHaveBeenCalledWith('test@example.com', 'password123');
     });
 
-    expect(mockPush).toHaveBeenCalledWith('/notes');
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeDisabled();
   });
 
   it('shows error message on login failure', async () => {
@@ -67,6 +61,6 @@ describe('LoginForm', () => {
     await user.click(screen.getByRole('button', { name: /sign in/i }));
 
     expect(await screen.findByText(/invalid email or password/i)).toBeInTheDocument();
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeEnabled();
   });
 });

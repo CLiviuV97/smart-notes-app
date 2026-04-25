@@ -27,8 +27,6 @@ function toastReducer(state: ToastItem[], action: ToastAction): ToastItem[] {
   }
 }
 
-let toastCount = 0;
-
 export interface ToastContextValue {
   toasts: ToastItem[];
   toast: (opts: Omit<ToastItem, 'id'>) => string;
@@ -41,7 +39,7 @@ export function useToastReducer() {
   const [toasts, dispatch] = useReducer(toastReducer, []);
 
   const toast = useCallback((opts: Omit<ToastItem, 'id'>) => {
-    const id = String(++toastCount);
+    const id = crypto.randomUUID();
     dispatch({ type: 'ADD', toast: { ...opts, id } });
     return id;
   }, []);

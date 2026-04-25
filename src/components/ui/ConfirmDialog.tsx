@@ -1,5 +1,6 @@
 'use client';
 
+import { useId } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Button } from './Button';
 import { cn } from '@/lib/utils/cn';
@@ -23,6 +24,7 @@ export function ConfirmDialog({
   confirmLabel = 'Confirm',
   variant = 'default',
 }: ConfirmDialogProps) {
+  const descId = useId();
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -30,17 +32,14 @@ export function ConfirmDialog({
         <Dialog.Content
           className={cn(
             'fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2',
-            'rounded-lg border border-border bg-background p-6 shadow-md',
+            'rounded-lg border border-rule bg-paper p-6 shadow-md',
             'data-[state=open]:animate-scale-in',
             'focus:outline-none',
           )}
-          aria-describedby="confirm-dialog-desc"
+          aria-describedby={descId}
         >
-          <Dialog.Title className="text-lg font-semibold text-foreground">{title}</Dialog.Title>
-          <Dialog.Description
-            id="confirm-dialog-desc"
-            className="mt-2 text-sm text-muted-foreground"
-          >
+          <Dialog.Title className="text-lg font-semibold text-ink">{title}</Dialog.Title>
+          <Dialog.Description id={descId} className="mt-2 text-sm text-ink-3">
             {description}
           </Dialog.Description>
           <div className="mt-6 flex justify-end gap-3">

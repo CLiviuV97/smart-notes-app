@@ -11,8 +11,10 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-border bg-background text-foreground',
-        error: 'border-danger/50 bg-danger/10 text-danger',
+        default: 'border-rule bg-paper text-ink',
+        error: 'border-margin-red/50 bg-margin-red/10 text-margin-red',
+        success: 'border-ok/50 bg-ok/10 text-ok',
+        warning: 'border-warning/50 bg-warning/10 text-warning',
       },
     },
     defaultVariants: {
@@ -38,7 +40,7 @@ const ToastAction = forwardRef<
   <ToastPrimitive.Action
     ref={ref}
     className={cn(
-      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-border bg-transparent px-3 text-sm font-medium transition-colors hover:bg-surface focus:outline-none focus:ring-2 focus:ring-ring',
+      'inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-rule bg-transparent px-3 text-sm font-medium transition-colors hover:bg-paper-2 focus:outline-none focus:ring-2 focus:ring-accent',
       className,
     )}
     {...props}
@@ -53,7 +55,7 @@ const ToastClose = forwardRef<
   <ToastPrimitive.Close
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-foreground focus:opacity-100 focus:outline-none group-hover:opacity-100',
+      'absolute right-2 top-2 rounded-md p-1 text-ink/50 opacity-0 transition-opacity hover:text-ink focus:opacity-100 focus:outline-none group-hover:opacity-100',
       className,
     )}
     toast-close=""
