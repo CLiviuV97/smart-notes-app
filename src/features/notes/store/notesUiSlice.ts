@@ -1,5 +1,4 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '@/store';
 
 interface NotesUiState {
   selectedNoteId: string | null;
@@ -32,14 +31,14 @@ const notesUiSlice = createSlice({
       state.filterTags = action.payload;
     },
   },
+  selectors: {
+    selectSelectedNoteId: (state) => state.selectedNoteId,
+    selectSearchQuery: (state) => state.searchQuery,
+  },
 });
 
 export const { setSelectedNote, setEditorDirty, setSearchQuery, setFilterTags } =
   notesUiSlice.actions;
-
-export const selectSelectedNoteId = (state: RootState) => state.notesUi.selectedNoteId;
-export const selectIsEditorDirty = (state: RootState) => state.notesUi.isEditorDirty;
-export const selectSearchQuery = (state: RootState) => state.notesUi.searchQuery;
-export const selectFilterTags = (state: RootState) => state.notesUi.filterTags;
+export const { selectSelectedNoteId, selectSearchQuery } = notesUiSlice.selectors;
 
 export default notesUiSlice.reducer;

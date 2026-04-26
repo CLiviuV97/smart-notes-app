@@ -57,6 +57,7 @@ export const notesApi = createApi({
     getNote: builder.query<Note, string>({
       query: (id) => `/notes/${id}`,
       providesTags: (_result, _error, id) => [{ type: 'Note', id }],
+      keepUnusedDataFor: 300,
     }),
 
     createNote: builder.mutation<
@@ -90,7 +91,7 @@ export const notesApi = createApi({
           }),
         );
         const patchList = dispatch(
-          notesApi.util.updateQueryData('listNotes', 'listNotes' as never, (draft) => {
+          notesApi.util.updateQueryData('listNotes', { limit: 20 }, (draft) => {
             const idx = draft.items.findIndex((n) => n.id === id);
             const item = draft.items[idx];
             if (item) {
@@ -121,7 +122,7 @@ export const notesApi = createApi({
       }),
       async onQueryStarted(id, { dispatch, queryFulfilled }) {
         const patchList = dispatch(
-          notesApi.util.updateQueryData('listNotes', 'listNotes' as never, (draft) => {
+          notesApi.util.updateQueryData('listNotes', { limit: 20 }, (draft) => {
             draft.items = draft.items.filter((n) => n.id !== id);
           }),
         );
