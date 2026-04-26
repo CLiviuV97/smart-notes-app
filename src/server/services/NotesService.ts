@@ -34,16 +34,14 @@ export class NotesService {
     id: string,
     patch: { title?: string; content?: string },
   ): Promise<Note> {
-    await this.getById(uid, id);
-    return this.repo.update(id, patch);
+    return this.repo.updateIfOwner(uid, id, patch);
   }
 
   async delete(uid: string, id: string): Promise<void> {
-    await this.getById(uid, id);
-    return this.repo.delete(id);
+    return this.repo.deleteIfOwner(uid, id);
   }
 }
 
-export function notesServiceFactory() {
-  return new NotesService(notesRepository);
+export function notesServiceFactory(repo: INotesRepository = notesRepository) {
+  return new NotesService(repo);
 }

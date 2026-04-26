@@ -132,10 +132,7 @@ export const notesApi = createApi({
           patchList.undo();
         }
       },
-      invalidatesTags: (_result, _error, id) => [
-        { type: 'Note', id },
-        { type: 'Notes', id: 'LIST' },
-      ],
+      invalidatesTags: [{ type: 'Notes', id: 'LIST' }],
     }),
 
     generateAISummary: builder.mutation<Note, string>({

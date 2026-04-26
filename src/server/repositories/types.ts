@@ -25,4 +25,16 @@ export interface INotesRepository {
     },
   ): Promise<Note>;
   delete(id: string): Promise<void>;
+  updateIfOwner(
+    uid: string,
+    id: string,
+    patch: {
+      title?: string;
+      content?: string;
+      summary?: string;
+      tags?: string[];
+      aiGeneratedAt?: string;
+    },
+  ): Promise<Note>;
+  deleteIfOwner(uid: string, id: string): Promise<void>;
 }

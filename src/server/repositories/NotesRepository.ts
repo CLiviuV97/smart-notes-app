@@ -1,7 +1,14 @@
 import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 import { adminDb } from '@/lib/firebase/admin';
+import { AppError } from '@/server/errors/AppError';
 import type { Note, PaginatedResult } from '@/types/note';
 import type { INotesRepository } from './types';
+
+function toIsoString(value: unknown, fallback?: string): string | null {
+  if (value instanceof Timestamp) return value.toDate().toISOString();
+  if (typeof value === 'string') return value;
+  return fallback ?? null;
+}
 
 class NotesRepository implements INotesRepository {
   private collection = adminDb.collection('notes');
@@ -17,9 +24,10 @@ class NotesRepository implements INotesRepository {
 
     if (opts.cursor) {
       const cursorDoc = await this.collection.doc(opts.cursor).get();
-      if (cursorDoc.exists) {
-        query = query.startAfter(cursorDoc);
+      if (!cursorDoc.exists) {
+        throw new AppError('Invalid cursor', 'INVALID_CURSOR', 400);
       }
+      query = query.startAfter(cursorDoc);
     }
 
     const snapshot = await query.get();
@@ -82,29 +90,56 @@ class NotesRepository implements INotesRepository {
     await this.collection.doc(id).delete();
   }
 
-  private toNote(doc: FirebaseFirestore.DocumentSnapshot): Note {
-    const data = doc.data()!;
+  async updateIfOwner(
+    uid: string,
+    id: string,
+    patch: {
+      title?: string;
+      content?: string;
+      summary?: string;
+      tags?: string[];
+      aiGeneratedAt?: string;
+    },
+  ): Promise<Note> {
+    const ref = this.collection.doc(id);
+    return adminDb.runTransaction(async (tx) => {
+      const doc = await tx.get(ref);
+      if (!doc.exists) throw AppError.notFound('Note not found');
+      if (doc.data()!.ownerId !== uid) throw AppError.forbidden();
+      const updatedData = { ...patch, updatedAt: FieldValue.serverTimestamp() };
+      tx.update(ref, updatedData);
+      const data = { ...doc.data()!, ...patch, updatedAt: new Date().toISOString() };
+      return this.toNoteFromData(id, data);
+    });
+  }
+
+  async deleteIfOwner(uid: string, id: string): Promise<void> {
+    const ref = this.collection.doc(id);
+    await adminDb.runTransaction(async (tx) => {
+      const doc = await tx.get(ref);
+      if (!doc.exists) throw AppError.notFound('Note not found');
+      if (doc.data()!.ownerId !== uid) throw AppError.forbidden();
+      tx.delete(ref);
+    });
+  }
+
+  private toNoteFromData(id: string, data: FirebaseFirestore.DocumentData): Note {
+    const now = new Date().toISOString();
     return {
-      id: doc.id,
+      id,
       ownerId: data.ownerId,
       title: data.title,
       content: data.content,
       summary: data.summary ?? null,
       tags: data.tags ?? [],
-      aiGeneratedAt: data.aiGeneratedAt
-        ? data.aiGeneratedAt instanceof Timestamp
-          ? data.aiGeneratedAt.toDate().toISOString()
-          : data.aiGeneratedAt
-        : null,
-      createdAt:
-        data.createdAt instanceof Timestamp
-          ? data.createdAt.toDate().toISOString()
-          : (data.createdAt ?? new Date().toISOString()),
-      updatedAt:
-        data.updatedAt instanceof Timestamp
-          ? data.updatedAt.toDate().toISOString()
-          : (data.updatedAt ?? new Date().toISOString()),
+      aiGeneratedAt: toIsoString(data.aiGeneratedAt),
+      createdAt: toIsoString(data.createdAt, now)!,
+      updatedAt: toIsoString(data.updatedAt, now)!,
     };
+  }
+
+  private toNote(doc: FirebaseFirestore.DocumentSnapshot): Note {
+    return this.toNoteFromData(doc.id, doc.data()!);
   }
 }
 

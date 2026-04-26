@@ -8,6 +8,14 @@ import { AppError } from '@/server/errors/AppError';
 import type { Note, PaginatedResult } from '@/types/note';
 import type { INotesRepository } from '@/server/repositories/types';
 
+type NotePatch = {
+  title?: string;
+  content?: string;
+  summary?: string;
+  tags?: string[];
+  aiGeneratedAt?: string;
+};
+
 class InMemoryNotesRepository implements INotesRepository {
   private store = new Map<string, Note>();
   private counter = 0;
@@ -74,6 +82,22 @@ class InMemoryNotesRepository implements INotesRepository {
   }
 
   async delete(id: string): Promise<void> {
+    this.store.delete(id);
+  }
+
+  async updateIfOwner(uid: string, id: string, patch: NotePatch): Promise<Note> {
+    const existing = this.store.get(id);
+    if (!existing) throw AppError.notFound('Note not found');
+    if (existing.ownerId !== uid) throw AppError.forbidden();
+    const updated: Note = { ...existing, ...patch, updatedAt: new Date().toISOString() };
+    this.store.set(id, updated);
+    return updated;
+  }
+
+  async deleteIfOwner(uid: string, id: string): Promise<void> {
+    const existing = this.store.get(id);
+    if (!existing) throw AppError.notFound('Note not found');
+    if (existing.ownerId !== uid) throw AppError.forbidden();
     this.store.delete(id);
   }
 }
