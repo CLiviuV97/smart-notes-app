@@ -1,5 +1,4 @@
-import { withErrorHandler } from '@/server/middleware/withErrorHandler';
-import { withAuth } from '@/server/middleware/withAuth';
+import { protectedRoute } from '@/server/middleware/protectedRoute';
 import { isPdfMagicBytes } from '@/server/utils/pdfValidation';
 import {
   checkPdfRateLimit,
@@ -15,41 +14,39 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const service = pdfExtractionServiceFactory();
 
-export const POST = withErrorHandler(
-  withAuth(async (req, _ctx, user) => {
-    const formData = await req.formData();
-    const file = formData.get('file');
+export const POST = protectedRoute(async (req, _ctx, user) => {
+  const formData = await req.formData();
+  const file = formData.get('file');
 
-    if (!file || !(file instanceof File)) {
-      throw new AppError('No PDF file provided', 'BAD_REQUEST', 400);
-    }
+  if (!file || !(file instanceof File)) {
+    throw new AppError('No PDF file provided', 'BAD_REQUEST', 400);
+  }
 
-    // Validate MIME type
-    if (file.type !== 'application/pdf') {
-      throw new AppError('File must be a PDF', 'BAD_REQUEST', 400);
-    }
+  // Validate MIME type
+  if (file.type !== 'application/pdf') {
+    throw new AppError('File must be a PDF', 'BAD_REQUEST', 400);
+  }
 
-    // Validate size
-    if (file.size > MAX_FILE_SIZE) {
-      throw new AppError('PDF exceeds 10MB limit', 'BAD_REQUEST', 400);
-    }
+  // Validate size
+  if (file.size > MAX_FILE_SIZE) {
+    throw new AppError('PDF exceeds 10MB limit', 'BAD_REQUEST', 400);
+  }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
+  const buffer = Buffer.from(await file.arrayBuffer());
 
-    // Validate magic bytes
-    if (!isPdfMagicBytes(buffer)) {
-      throw new AppError('File must be a PDF', 'BAD_REQUEST', 400);
-    }
+  // Validate magic bytes
+  if (!isPdfMagicBytes(buffer)) {
+    throw new AppError('File must be a PDF', 'BAD_REQUEST', 400);
+  }
 
-    // Rate limit & concurrency
-    checkPdfRateLimit(user.uid);
-    acquirePdfConcurrency(user.uid);
+  // Rate limit & concurrency
+  checkPdfRateLimit(user.uid);
+  acquirePdfConcurrency(user.uid);
 
-    try {
-      const extracted = await service.extract(buffer);
-      return Response.json(extracted);
-    } finally {
-      releasePdfConcurrency(user.uid);
-    }
-  }),
-);
+  try {
+    const extracted = await service.extract(buffer);
+    return Response.json(extracted);
+  } finally {
+    releasePdfConcurrency(user.uid);
+  }
+});

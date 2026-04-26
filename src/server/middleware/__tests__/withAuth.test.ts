@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { withAuth } from '../withAuth';
+import { AppError } from '@/server/errors/AppError';
 
 jest.mock('@/lib/firebase/admin', () => ({
   adminAuth: {
@@ -20,22 +21,25 @@ describe('withAuth', () => {
     jest.clearAllMocks();
   });
 
-  it('returns 401 when Authorization header is missing', async () => {
+  it('throws 401 AppError when Authorization header is missing', async () => {
     const wrapped = withAuth(mockHandler);
     const req = new Request('http://localhost/api/test');
-    const res = await wrapped(req, {});
-    expect(res.status).toBe(401);
-    const body = await res.json();
-    expect(body.error).toBe('UNAUTHORIZED');
+    await expect(wrapped(req, {})).rejects.toThrow(AppError);
+    await expect(wrapped(req, {})).rejects.toMatchObject({
+      code: 'UNAUTHORIZED',
+      status: 401,
+    });
   });
 
-  it('returns 401 when Authorization header does not start with Bearer', async () => {
+  it('throws 401 AppError when Authorization header does not start with Bearer', async () => {
     const wrapped = withAuth(mockHandler);
     const req = new Request('http://localhost/api/test', {
       headers: { Authorization: 'Basic abc123' },
     });
-    const res = await wrapped(req, {});
-    expect(res.status).toBe(401);
+    await expect(wrapped(req, {})).rejects.toThrow(AppError);
+    await expect(wrapped(req, {})).rejects.toMatchObject({
+      status: 401,
+    });
   });
 
   it('calls handler with user on valid token', async () => {

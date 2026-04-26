@@ -4,9 +4,9 @@ import { AppError } from '@/server/errors/AppError';
 import { logger } from '@/lib/logger';
 import type { ApiErrorResponse } from '@/types/api';
 
-type RouteHandler = (req: Request, ctx: unknown) => Promise<Response>;
+type RouteHandler<TCtx = unknown> = (req: Request, ctx: TCtx) => Promise<Response>;
 
-export function withErrorHandler(handler: RouteHandler): RouteHandler {
+export function withErrorHandler<TCtx = unknown>(handler: RouteHandler<TCtx>): RouteHandler<TCtx> {
   return async (req, ctx) => {
     try {
       return await handler(req, ctx);

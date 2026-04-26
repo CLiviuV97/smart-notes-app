@@ -14,6 +14,11 @@ export interface SerializedUser {
 
 export type AuthStatus = 'idle' | 'loading' | 'authenticated' | 'unauthenticated' | 'error';
 
+/** Type-safe route context with params promise */
+export interface RouteContext<TParams = unknown> {
+  params: Promise<TParams>;
+}
+
 export interface ApiErrorResponse {
   error: string;
   message?: string;

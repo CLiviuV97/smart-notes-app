@@ -1,31 +1,27 @@
-import { withErrorHandler } from '@/server/middleware/withErrorHandler';
-import { withAuth } from '@/server/middleware/withAuth';
+import { protectedRoute } from '@/server/middleware/protectedRoute';
 import { notesServiceFactory } from '@/server/services/NotesService';
 import { updateNoteSchema } from '@/lib/validators/noteSchemas';
+import type { RouteContext } from '@/types/api';
 
 const service = notesServiceFactory();
 
-export const GET = withErrorHandler(
-  withAuth(async (_req, ctx, user) => {
-    const { id } = await (ctx as { params: Promise<{ id: string }> }).params;
-    const note = await service.getById(user.uid, id);
-    return Response.json(note);
-  }),
-);
+type Ctx = RouteContext<{ id: string }>;
 
-export const PATCH = withErrorHandler(
-  withAuth(async (req, ctx, user) => {
-    const { id } = await (ctx as { params: Promise<{ id: string }> }).params;
-    const patch = updateNoteSchema.parse(await req.json());
-    const note = await service.update(user.uid, id, patch);
-    return Response.json(note);
-  }),
-);
+export const GET = protectedRoute<Ctx>(async (_req, ctx, user) => {
+  const { id } = await ctx.params;
+  const note = await service.getById(user.uid, id);
+  return Response.json(note);
+});
 
-export const DELETE = withErrorHandler(
-  withAuth(async (_req, ctx, user) => {
-    const { id } = await (ctx as { params: Promise<{ id: string }> }).params;
-    await service.delete(user.uid, id);
-    return new Response(null, { status: 204 });
-  }),
-);
+export const PATCH = protectedRoute<Ctx>(async (req, ctx, user) => {
+  const { id } = await ctx.params;
+  const patch = updateNoteSchema.parse(await req.json());
+  const note = await service.update(user.uid, id, patch);
+  return Response.json(note);
+});
+
+export const DELETE = protectedRoute<Ctx>(async (_req, ctx, user) => {
+  const { id } = await ctx.params;
+  await service.delete(user.uid, id);
+  return new Response(null, { status: 204 });
+});

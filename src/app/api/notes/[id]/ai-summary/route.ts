@@ -1,15 +1,15 @@
-import { withErrorHandler } from '@/server/middleware/withErrorHandler';
-import { withAuth } from '@/server/middleware/withAuth';
+import { protectedRoute } from '@/server/middleware/protectedRoute';
 import { checkAIRateLimit } from '@/server/middleware/rateLimit';
 import { aiSummaryServiceFactory } from '@/server/services/AISummaryService';
+import type { RouteContext } from '@/types/api';
 
 const service = aiSummaryServiceFactory();
 
-export const POST = withErrorHandler(
-  withAuth(async (_req, ctx, user) => {
-    checkAIRateLimit(user.uid);
-    const { id } = await (ctx as { params: Promise<{ id: string }> }).params;
-    const note = await service.generateSummary(user.uid, id);
-    return Response.json(note);
-  }),
-);
+type Ctx = RouteContext<{ id: string }>;
+
+export const POST = protectedRoute<Ctx>(async (_req, ctx, user) => {
+  checkAIRateLimit(user.uid);
+  const { id } = await ctx.params;
+  const note = await service.generateSummary(user.uid, id);
+  return Response.json(note);
+});
