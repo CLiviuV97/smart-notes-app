@@ -25,9 +25,15 @@ export function useErrorReporter() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(report),
-        }).catch(() => {
-          // Silently drop — we can't report errors about error reporting
-        });
+        })
+          .then((res) => {
+            if (!res.ok) {
+              console.error('[useErrorReporter] /api/log-error responded', res.status, report);
+            }
+          })
+          .catch((networkErr) => {
+            console.error('[useErrorReporter] Failed to send error report:', networkErr, report);
+          });
       }
     }
 
