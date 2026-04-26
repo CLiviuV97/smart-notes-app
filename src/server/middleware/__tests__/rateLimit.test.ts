@@ -82,4 +82,13 @@ describe('acquirePdfConcurrency / releasePdfConcurrency', () => {
     expect(() => acquirePdfConcurrency('user-conc-re')).not.toThrow();
     releasePdfConcurrency('user-conc-re');
   });
+
+  it('allows re-acquire after TTL expires (crash recovery)', () => {
+    jest.useFakeTimers();
+    acquirePdfConcurrency('user-ttl');
+    jest.advanceTimersByTime(90_001);
+    expect(() => acquirePdfConcurrency('user-ttl')).not.toThrow();
+    releasePdfConcurrency('user-ttl');
+    jest.useRealTimers();
+  });
 });
