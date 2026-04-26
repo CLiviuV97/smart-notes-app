@@ -2,6 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { AppError } from '@/server/errors/AppError';
 import { extractedPdfSchema } from '@/types/pdf';
 import type { ExtractedPdf, ExtractedPdfAIResponse } from '@/types/pdf';
+import { PDF_MAX_PAGES } from '@/lib/pdf/constants';
 
 // --- Interface ---
 
@@ -12,7 +13,6 @@ export interface IPdfExtractionService {
 // --- Constants ---
 
 const TIMEOUT_MS = 55_000;
-const MAX_PAGES = 20;
 
 const EXTRACTION_PROMPT = `You are a PDF analysis assistant. Extract and analyze the provided PDF document.
 
@@ -55,9 +55,9 @@ export class GeminiPdfExtractionService implements IPdfExtractionService {
   async extract(buffer: Buffer): Promise<ExtractedPdf> {
     const aiResponse = await this.callGemini(buffer);
 
-    if (aiResponse.pageCount > MAX_PAGES) {
+    if (aiResponse.pageCount > PDF_MAX_PAGES) {
       throw new AppError(
-        `PDF has ${aiResponse.pageCount} pages. Maximum allowed is ${MAX_PAGES}.`,
+        `PDF has ${aiResponse.pageCount} pages. Maximum allowed is ${PDF_MAX_PAGES}.`,
         'PDF_TOO_LARGE',
         400,
       );

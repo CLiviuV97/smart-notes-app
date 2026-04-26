@@ -7,7 +7,7 @@ import { useAppDispatch } from '@/store';
 import { setSelectedNote } from '@/features/notes/store/notesUiSlice';
 import { useCreateNoteMutation } from '@/features/notes/api/notesApi';
 import { Button } from '@/components/ui/Button';
-import { PdfImportModal } from '@/features/notes/components/PdfImportModal';
+import { PdfImportModal } from '@/features/notes/components/pdfImport/PdfImportModal';
 
 interface SidebarActionsProps {
   onClose?: () => void;

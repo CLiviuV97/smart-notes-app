@@ -7,10 +7,9 @@ import {
 } from '@/server/middleware/rateLimit';
 import { pdfExtractionServiceFactory } from '@/server/services/PdfExtractionService';
 import { AppError } from '@/server/errors/AppError';
+import { PDF_MAX_FILE_SIZE_BYTES } from '@/lib/pdf/constants';
 
 export const maxDuration = 60;
-
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const service = pdfExtractionServiceFactory();
 
@@ -28,7 +27,7 @@ export const POST = protectedRoute(async (req, _ctx, user) => {
   }
 
   // Validate size
-  if (file.size > MAX_FILE_SIZE) {
+  if (file.size > PDF_MAX_FILE_SIZE_BYTES) {
     throw new AppError('PDF exceeds 10MB limit', 'BAD_REQUEST', 400);
   }
 
