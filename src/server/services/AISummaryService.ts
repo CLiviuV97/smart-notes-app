@@ -17,9 +17,11 @@ export type AIResponse = z.infer<typeof aiResponseSchema>;
 
 // --- Interface ---
 
+export type AISummaryResult = Note & { _aiWarning?: string };
+
 export interface IAISummaryService {
   summarize(content: string): Promise<AIResponse>;
-  generateSummary(uid: string, noteId: string): Promise<Note>;
+  generateSummary(uid: string, noteId: string): Promise<AISummaryResult>;
 }
 
 // --- Constants ---
@@ -44,7 +46,7 @@ Note:
 export class GeminiSummaryService implements IAISummaryService {
   private notesService: NotesService;
 
-  constructor(private repo: INotesRepository) {
+  constructor(repo: INotesRepository) {
     this.notesService = new NotesService(repo);
   }
 
@@ -78,20 +80,28 @@ export class GeminiSummaryService implements IAISummaryService {
     throw new AppError('AI returned invalid response format', 'AI_PARSE_ERROR', 502);
   }
 
-  async generateSummary(uid: string, noteId: string): Promise<Note> {
+  async generateSummary(uid: string, noteId: string): Promise<AISummaryResult> {
     const note = await this.notesService.getById(uid, noteId);
 
     if (!note.content) {
       throw new AppError('Note has no content', 'BAD_REQUEST', 400);
     }
 
+    const wasTruncated = note.content.length > CONTENT_MAX_CHARS;
     const { summary, tags } = await this.summarize(note.content);
 
-    return this.repo.update(noteId, {
+    const updated = await this.notesService.updateAIFields(uid, noteId, {
       summary,
       tags: tags.map((t) => t.toLowerCase()),
       aiGeneratedAt: new Date().toISOString(),
     });
+
+    return wasTruncated
+      ? {
+          ...updated,
+          _aiWarning: `Only the first ${CONTENT_MAX_CHARS.toLocaleString()} characters were analysed (note is ${note.content.length.toLocaleString()} characters).`,
+        }
+      : updated;
   }
 
   private async callGemini(prompt: string): Promise<string> {

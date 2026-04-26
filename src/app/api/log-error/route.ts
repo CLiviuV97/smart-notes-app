@@ -5,6 +5,7 @@ import { logger } from '@/lib/logger';
 const logErrorSchema = z.object({
   message: z.string().max(2000),
   stack: z.string().max(5000).optional(),
+  componentStack: z.string().max(5000).optional(),
   url: z.string().max(500).optional(),
   userAgent: z.string().max(500).optional(),
 });
@@ -57,6 +58,7 @@ export async function POST(req: Request) {
   logger.error('Client error', {
     clientError: parsed.data.message,
     stack: parsed.data.stack,
+    componentStack: parsed.data.componentStack,
     url: parsed.data.url,
     userAgent: parsed.data.userAgent,
     ip,

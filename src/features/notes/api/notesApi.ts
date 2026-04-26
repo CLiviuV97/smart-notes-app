@@ -135,7 +135,7 @@ export const notesApi = createApi({
       invalidatesTags: [{ type: 'Notes', id: 'LIST' }],
     }),
 
-    generateAISummary: builder.mutation<Note, string>({
+    generateAISummary: builder.mutation<Note & { _aiWarning?: string }, string>({
       query: (id) => ({
         url: `/notes/${id}/ai-summary`,
         method: 'POST',

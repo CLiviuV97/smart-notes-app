@@ -37,6 +37,15 @@ export class NotesService {
     return this.repo.updateIfOwner(uid, id, patch);
   }
 
+  async updateAIFields(
+    uid: string,
+    id: string,
+    fields: { summary: string; tags: string[]; aiGeneratedAt: string },
+  ): Promise<Note> {
+    await this.getById(uid, id);
+    return this.repo.update(id, fields);
+  }
+
   async delete(uid: string, id: string): Promise<void> {
     return this.repo.deleteIfOwner(uid, id);
   }

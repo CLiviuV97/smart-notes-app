@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Sparkles, Check } from 'lucide-react';
 import { useGenerateAISummaryMutation } from '@/features/notes/api/notesApi';
 import { useToast } from '@/components/ui/useToast';
+import { Button } from '@/components/ui/Button';
 
 interface GenerateAIButtonProps {
   noteId: string;
@@ -23,8 +24,15 @@ export function GenerateAIButton({ noteId }: GenerateAIButtonProps) {
 
   const handleGenerate = async () => {
     try {
-      await generate(noteId).unwrap();
+      const result = await generate(noteId).unwrap();
       setShowSuccess(true);
+      if (result._aiWarning) {
+        toast({
+          variant: 'warning',
+          title: 'Content was truncated',
+          description: result._aiWarning,
+        });
+      }
     } catch {
       toast({
         variant: 'error',
@@ -39,28 +47,23 @@ export function GenerateAIButton({ noteId }: GenerateAIButtonProps) {
 
   if (showSuccess) {
     return (
-      <button
-        disabled
-        className="flex items-center gap-1.5 rounded-[6px] bg-ok/10 px-2.5 py-1.5 text-[12px] font-medium text-ok"
-      >
+      <Button variant="ghost" size="sm" disabled className="bg-ok/10 text-ok hover:bg-ok/10">
         <Check className="h-3.5 w-3.5" />
         Done
-      </button>
+      </Button>
     );
   }
 
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={handleGenerate}
-      disabled={isLoading}
-      className="flex items-center gap-1.5 rounded-[6px] bg-accent-wash px-2.5 py-1.5 text-[12px] font-medium text-accent transition-colors hover:bg-accent/15 disabled:opacity-50"
+      loading={isLoading}
+      className="bg-accent-wash text-accent hover:bg-accent/15"
     >
-      {isLoading ? (
-        <span className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-accent border-t-transparent" />
-      ) : (
-        <Sparkles className="h-3.5 w-3.5" />
-      )}
+      {!isLoading && <Sparkles className="h-3.5 w-3.5" />}
       {isLoading ? 'Generating...' : 'AI Summary'}
-    </button>
+    </Button>
   );
 }
