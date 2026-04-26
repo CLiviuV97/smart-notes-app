@@ -22,6 +22,10 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inFlightRef = useRef<{ abort: () => void } | null>(null);
+  const requestIdRef = useRef(0);
+  const pendingPatchRef = useRef<{ title?: string; content?: string }>({});
   const initializedForRef = useRef<string | null>(null);
 
   // Sync from server — only on note switch or initial load
@@ -37,42 +41,61 @@ export function NoteEditor({ noteId }: NoteEditorProps) {
   const debouncedSave = useCallback(
     (patch: { title?: string; content?: string }) => {
       dispatch(setEditorDirty(true));
+      pendingPatchRef.current = { ...pendingPatchRef.current, ...patch };
+
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(async () => {
+        const finalPatch = pendingPatchRef.current;
+        pendingPatchRef.current = {};
+
+        // Cancel any in-flight PATCH
+        inFlightRef.current?.abort();
+
+        const myId = ++requestIdRef.current;
+
         setSaveStatus('saving');
+        const promise = updateNote({ id: noteId, ...finalPatch });
+        inFlightRef.current = promise;
+
         try {
-          await updateNote({ id: noteId, ...patch }).unwrap();
+          await promise.unwrap();
+          if (myId !== requestIdRef.current) return; // superseded
           setSaveStatus('saved');
           dispatch(setEditorDirty(false));
-          setTimeout(() => setSaveStatus('idle'), 2000);
-        } catch {
+          if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+          idleTimerRef.current = setTimeout(() => setSaveStatus('idle'), 3000);
+        } catch (err: unknown) {
+          if (myId !== requestIdRef.current) return;
+          if (err instanceof DOMException && err.name === 'AbortError') return;
           setSaveStatus('idle');
           dispatch(setEditorDirty(false));
         }
-      }, 1000);
+      }, 2000);
     },
     [noteId, updateNote, dispatch],
   );
 
-  // Cleanup timer
+  // Cleanup timers and in-flight requests
   useEffect(() => {
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      inFlightRef.current?.abort();
     };
   }, []);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setTitle(newTitle);
-    debouncedSave({ title: newTitle, content });
+    debouncedSave({ title: newTitle });
   };
 
   const handleContentChange = useCallback(
     (newContent: string) => {
       setContent(newContent);
-      debouncedSave({ title, content: newContent });
+      debouncedSave({ content: newContent });
     },
-    [title, debouncedSave],
+    [debouncedSave],
   );
 
   if (isLoading) {

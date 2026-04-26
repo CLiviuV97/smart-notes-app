@@ -13,7 +13,10 @@ const mockNote = {
   updatedAt: '2026-04-20T12:00:00Z',
 };
 
-const mockUpdateNote = jest.fn().mockReturnValue({ unwrap: () => Promise.resolve(mockNote) });
+const mockUpdateNote = jest.fn().mockReturnValue({
+  unwrap: () => Promise.resolve(mockNote),
+  abort: jest.fn(),
+});
 
 jest.mock('@/features/notes/api/notesApi', () => ({
   useGetNoteQuery: () => ({
@@ -57,8 +60,8 @@ describe('NoteEditor', () => {
     await user.clear(titleInput);
     await user.type(titleInput, 'New Title');
 
-    // Advance past debounce
-    jest.advanceTimersByTime(1100);
+    // Advance past 2000ms debounce
+    jest.advanceTimersByTime(2100);
 
     expect(mockUpdateNote).toHaveBeenCalled();
   });
